@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-outfit);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  body {
+    font-family: var(--font-jakarta);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  }
+}
+
+@layer components {
+  .nav-link {
+    font-family: var(--font-outfit);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-blue-500 to-cyan-500;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease-out forwards;
+} 
