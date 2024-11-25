@@ -1,81 +1,104 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import PageHero from '@/components/PageHero'
+import LoadingSpinner from '@/components/LoadingSpinner'
+import type { NewsItem } from '@/types'
 
-interface NewsArticle {
-  id: number
-  title: string
-  date: string
-  excerpt: string
-  content: string
-  image: string
-  category: 'Release' | 'Tour' | 'Update' | 'Announcement' | 'Launch'
-}
+// Hard-coded news items with proper date objects
+const defaultNewsItems: NewsItem[] = [
+  {
+    id: "1",
+    title: "'The Resurrection' - A Journey of Rebirth",
+    date: "November 22, 2024",
+    excerpt: "BZLY and KRUZ deliver a powerful comeback album chronicling their transformative journey from adversity to triumph.",
+    content: `'The Resurrection' is more than just an album...`,
+    image: "/article1.png",
+    category: 'Release',
+    createdAt: new Date('2024-11-22'),
+    updatedAt: new Date('2024-11-22')
+  },
+  {
+    id: "2",
+    title: "New Official Website Launch",
+    date: "December 1, 2024",
+    excerpt: "BZLY launches new interactive website to better connect with fans.",
+    content: "We're thrilled to announce the launch of our new official website...",
+    image: "/article2.png",
+    category: 'Launch',
+    createdAt: new Date('2024-12-01'),
+    updatedAt: new Date('2024-12-01')
+  },
+  {
+    id: "3",
+    title: "What's Next for BZLY",
+    date: "December 5, 2024",
+    excerpt: "Exciting developments on the horizon as BZLY teases new projects and collaborations.",
+    content: "As we close out 2024, we're already hard at work on new material...",
+    image: "/article3.jpg",
+    category: 'Update',
+    createdAt: new Date('2024-12-05'),
+    updatedAt: new Date('2024-12-05')
+  }
+]
 
 export default function News(): React.ReactElement {
-  const newsArticles: NewsArticle[] = [
-    {
-      id: 1,
-      title: "'The Resurrection' - A Journey of Rebirth",
-      date: "November 22, 2024",
-      excerpt: "BZLY and KRUZ deliver a powerful comeback album chronicling their transformative journey from adversity to triumph.",
-      content: `'The Resurrection' is more than just an album - it's a raw, unfiltered chronicle of rebirth. 
-      BZLY's and KRUZ's comeback album takes listeners on an intense journey from hospital bed to unstoppable force, 
-      depicting the raw emotions and transformative experiences of overcoming personal and external demons. 
+  const [newsArticles, setNewsArticles] = useState<NewsItem[]>(defaultNewsItems)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string>('')
+
+  useEffect(() => {
+    fetchNews()
+  }, [])
+
+  const fetchNews = async () => {
+    try {
+      const response = await fetch('/api/news')
+      if (!response.ok) throw new Error('Failed to fetch news')
+      const data = await response.json()
       
-      The album opens with a gripping skit that sets the stage for what's to come, immediately pulling listeners 
-      into the narrative. Tracks like "Big Moves" and "Did The Dash" showcase not just musical prowess, but serve 
-      as anthems of resilience and determination. Each track peels back another layer of the journey, from breaking 
-      free of toxic relationships to embracing new beginnings.
+      // Format MongoDB data
+      const dbArticles = data.map((item: any) => ({
+        ...item,
+        id: item._id,
+        date: new Date(item.date).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        }),
+        createdAt: new Date(item.createdAt),
+        updatedAt: new Date(item.updatedAt)
+      }))
 
-      "Raised in the Struggle" and "Gotta Be a Dawg" further cement the album's themes of perseverance and authenticity, 
-      while the strategic placement of skits throughout the project helps weave a compelling narrative that keeps 
-      listeners engaged from start to finish.
+      // Combine default and MongoDB articles
+      const allArticles = [...defaultNewsItems, ...dbArticles]
 
-      The outro offers an intriguing glimpse into what's next for BZLY and KRUZ, serving as both a conclusion to 
-      this chapter and a preview of their promising future. More than just a collection of tracks, 'The Resurrection' 
-      stands as a testament to loyalty, resilience, and the power of true artistic vision.
+      // Sort by date in descending order (newest first)
+      // First try createdAt, fallback to parsing the date string
+      const sortedArticles = allArticles.sort((a, b) => {
+        const dateA = a.createdAt ? a.createdAt : new Date(a.date)
+        const dateB = b.createdAt ? b.createdAt : new Date(b.date)
+        return dateB.getTime() - dateA.getTime()
+      })
 
-      Available now on all major streaming platforms, this is an album that needs to be experienced from start to finish 
-      to truly appreciate its impact.`,
-      image: "/article1.png",
-      category: 'Release'
-    },
-    {
-      id: 2,
-      title: "New Official Website Launch",
-      date: "December 1, 2024",
-      excerpt: "BZLY launches new interactive website to better connect with fans.",
-      content: "We're thrilled to announce the launch of our new official website. This platform will serve as your central hub for all things BZLY - from music releases to behind-the-scenes content. The new site features an immersive design that reflects our artistic vision, making it easier than ever to stay connected with our journey.",
-      image: "/article2.png",
-      category: 'Launch'
-    },
-    {
-      id: 3,
-      title: "What's Next for BZLY",
-      date: "December 5, 2024",
-      excerpt: "Exciting developments on the horizon as BZLY teases new projects and collaborations.",
-      content: "As we close out 2024, we're already hard at work on new material. Expect more releases, potential collaborations, and some exciting surprises in early 2025. We're pushing our creative boundaries and can't wait to share what we've been working on. Stay tuned for more updates!",
-      image: "/article3.jpg",
-      category: 'Update'
-    }
-  ]
-
-  const getCategoryColor = (category: NewsArticle['category']): string => {
-    switch (category) {
-      case 'Release':
-        return 'bg-sky-600'
-      case 'Tour':
-        return 'bg-blue-600'
-      case 'Update':
-        return 'bg-sky-500'
-      default:
-        return 'bg-gray-600'
+      setNewsArticles(sortedArticles)
+    } catch (err) {
+      console.error('Failed to load news from MongoDB, using default data:', err)
+      // Keep using default news items on error, but still sort them
+      const sortedDefaultArticles = [...defaultNewsItems].sort((a, b) => {
+        const dateA = a.createdAt ? a.createdAt : new Date(a.date)
+        const dateB = b.createdAt ? b.createdAt : new Date(b.date)
+        return dateB.getTime() - dateA.getTime()
+      })
+      setNewsArticles(sortedDefaultArticles)
+    } finally {
+      setIsLoading(false)
     }
   }
+
+  if (isLoading) return <LoadingSpinner />
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white">
@@ -87,6 +110,12 @@ export default function News(): React.ReactElement {
       {/* News Articles */}
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
+          {error && (
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-center">
+              {error}
+            </div>
+          )}
+
           <div className="grid grid-cols-1 gap-12">
             {newsArticles.map((article) => (
               <article 
@@ -117,7 +146,7 @@ export default function News(): React.ReactElement {
                       <h2 className="text-2xl font-bold mt-2 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500">
                         {article.title}
                       </h2>
-                      <p className="text-gray-300 mb-6">{article.content}</p>
+                      <p className="text-gray-300 mb-6">{article.excerpt}</p>
                     </div>
                     <Link 
                       href={`/news/${article.id}`}
@@ -159,4 +188,19 @@ export default function News(): React.ReactElement {
       </section>
     </main>
   )
+}
+
+function getCategoryColor(category: NewsItem['category']): string {
+  switch (category) {
+    case 'Release':
+      return 'bg-sky-600'
+    case 'Tour':
+      return 'bg-blue-600'
+    case 'Update':
+      return 'bg-sky-500'
+    case 'Launch':
+      return 'bg-green-600'
+    default:
+      return 'bg-gray-600'
+  }
 } 

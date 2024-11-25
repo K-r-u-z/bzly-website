@@ -1,28 +1,42 @@
+import type { INews, IAlbum, ITrack, IStreamingLinks } from './mongodb'
+import { Types } from 'mongoose'
+
 export interface NewsItem {
-  id: number
+  id: string | Types.ObjectId
+  _id?: string | Types.ObjectId
   title: string
   content: string
-  date: string
   excerpt: string
+  date: string
   image: string
   category: 'Release' | 'Tour' | 'Update' | 'Announcement' | 'Launch'
-}
-
-export interface Track {
-  title: string
-  duration: string
-  trackUrl: string
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export interface Album {
-  id: number
+  id: string | Types.ObjectId
+  _id?: string | Types.ObjectId
   title: string
   year: string
   coverArt: string
-  streamingLinks: {
-    spotify?: string
-    apple?: string
-    soundcloud?: string
-  }
   tracks: Track[]
+  streamingLinks: StreamingLinks
+  createdAt?: Date
+  updatedAt?: Date
+}
+
+export interface Track {
+  id?: string | Types.ObjectId
+  _id?: string | Types.ObjectId
+  title: string
+  duration: string
+  trackUrl: string
+  order: number
+}
+
+export interface StreamingLinks {
+  spotify?: string
+  apple?: string
+  soundcloud?: string
 } 

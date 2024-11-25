@@ -1,44 +1,104 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import PageHero from '@/components/PageHero'
 import TrackPlayer from '@/components/TrackPlayer'
+import type { Album } from '@/types'
 
-interface Track {
-  title: string
-  duration: string
-  trackUrl: string
-}
-
-interface Album {
-  id: number
-  title: string
-  year: string
-  coverArt: string
+// Hard-coded default album
+const defaultAlbum: Album = {
+  id: "1",
+  title: "The Resurrection",
+  year: "2024",
+  coverArt: "/album1.png",
   streamingLinks: {
-    spotify?: string
-    apple?: string
-    soundcloud?: string
-  }
-  tracks: Track[]
+    spotify: "#",
+    soundcloud: "https://soundcloud.com/kruzbeats/sets/the-resurrection"
+  },
+  tracks: [
+    { 
+      title: "INTRO - Skit",
+      duration: "0:48",
+      trackUrl: "https://soundcloud.com/kruzbeats/intro-skit?in=kruzbeats/sets/the-resurrection&si=2c994c8221304454bda373c982e01e01&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing",
+      order: 0
+    },
+    { 
+      title: "BIG MOVES",
+      duration: "2:17",
+      trackUrl: "https://soundcloud.com/kruzbeats/big-moves",
+      order: 1
+    },
+    { 
+      title: "THE PICKUP - Skit",
+      duration: "0:37",
+      trackUrl: "https://soundcloud.com/kruzbeats/the-pickup-skit",
+      order: 2
+    },
+    { 
+      title: "DID THE DASH",
+      duration: "2:16",
+      trackUrl: "https://soundcloud.com/kruzbeats/did-the-dash",
+      order: 3
+    },
+    { 
+      title: "RAISED IN THE STRUGGLE",
+      duration: "2:31",
+      trackUrl: "https://soundcloud.com/kruzbeats/raised-in-the-struggle",
+      order: 4
+    },
+    { 
+      title: "GOTTA BE A DAWG",
+      duration: "2:13",
+      trackUrl: "https://soundcloud.com/kruzbeats/gotta-be-a-dawg",
+      order: 5
+    },
+    { 
+      title: "OUTRO - Skit",
+      duration: "0:51",
+      trackUrl: "https://soundcloud.com/kruzbeats/outro-skit",
+      order: 6
+    }
+  ]
 }
 
 export default function Music(): React.ReactElement {
-  const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(-1)
+  const [albums, setAlbums] = useState<Album[]>([defaultAlbum])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string>('')
   const [currentlyPlaying, setCurrentlyPlaying] = useState<number | null>(null)
   const [playedTracks, setPlayedTracks] = useState<Set<number>>(new Set())
   const [isExpanded, setIsExpanded] = useState(false)
 
-  const handleTrackFinish = (currentIndex: number) => {
-    const nextIndex = currentIndex + 1
-    if (nextIndex < albums[0].tracks.length) {
-      setCurrentTrackIndex(nextIndex)
-      setCurrentlyPlaying(nextIndex)
-      setPlayedTracks(prev => new Set(prev).add(nextIndex))
-    } else {
-      setCurrentlyPlaying(null)
+  useEffect(() => {
+    fetchAlbums()
+  }, [])
+
+  const fetchAlbums = async () => {
+    try {
+      const response = await fetch('/api/music')
+      if (!response.ok) throw new Error('Failed to fetch albums')
+      const data = await response.json()
+      
+      // Format MongoDB data
+      const dbAlbums = data.map((album: any) => ({
+        ...album,
+        id: album._id,
+        tracks: album.tracks.sort((a: any, b: any) => a.order - b.order)
+      }))
+
+      // Combine default and MongoDB albums, sorted by year (newest first)
+      const allAlbums = [...dbAlbums, defaultAlbum].sort((a, b) => 
+        parseInt(b.year) - parseInt(a.year)
+      )
+
+      setAlbums(allAlbums)
+    } catch (err) {
+      console.error('Failed to load albums from MongoDB, using default album:', err)
+      // Keep using default album on error
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -47,74 +107,39 @@ export default function Music(): React.ReactElement {
     setPlayedTracks(prev => new Set(prev).add(index))
   }
 
+  const handleTrackFinish = (index: number) => {
+    if (index < albums[0].tracks.length - 1) {
+      setCurrentlyPlaying(index + 1)
+    } else {
+      setCurrentlyPlaying(null)
+    }
+  }
+
   const toggleExpand = () => {
     setIsExpanded(!isExpanded)
   }
 
   const shouldRenderTrack = (index: number) => {
-    return isExpanded || index < 3
+    if (isExpanded) return true
+    return index < 3 || index === currentlyPlaying || playedTracks.has(index)
   }
-
-  const albums: Album[] = [
-    {
-      id: 1,
-      title: "The Resurrection",
-      year: "2024",
-      coverArt: "/album1.png",
-      streamingLinks: {
-        spotify: "#",
-        soundcloud: "https://soundcloud.com/kruzbeats/sets/the-resurrection"
-      },
-      tracks: [
-        { 
-          title: "INTRO - Skit",
-          duration: "0:48",
-          trackUrl: "https://soundcloud.com/kruzbeats/intro-skit?in=kruzbeats/sets/the-resurrection&si=2c994c8221304454bda373c982e01e01&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"
-        },
-        { 
-          title: "BIG MOVES",
-          duration: "2:17",
-          trackUrl: "https://soundcloud.com/kruzbeats/big-moves"
-        },
-        { 
-          title: "THE PICKUP - Skit",
-          duration: "0:37",
-          trackUrl: "https://soundcloud.com/kruzbeats/the-pickup-skit"
-        },
-        { 
-          title: "DID THE DASH",
-          duration: "2:16",
-          trackUrl: "https://soundcloud.com/kruzbeats/did-the-dash"
-        },
-        { 
-          title: "RAISED IN THE STRUGGLE",
-          duration: "2:31",
-          trackUrl: "https://soundcloud.com/kruzbeats/raised-in-the-struggle"
-        },
-        { 
-          title: "GOTTA BE A DAWG",
-          duration: "2:13",
-          trackUrl: "https://soundcloud.com/kruzbeats/gotta-be-a-dawg"
-        },
-        { 
-          title: "OUTRO - Skit",
-          duration: "0:51",
-          trackUrl: "https://soundcloud.com/kruzbeats/outro-skit"
-        }
-      ]
-    },
-  ]
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white">
       <PageHero 
-        title="Discography"
-        subtitle="Explore the sonic universe of BZLY"
+        title="Music"
+        subtitle="Listen to BZLY's latest releases and full discography"
       />
       
       {/* Albums Section */}
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
+          {error && (
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-center">
+              {error}
+            </div>
+          )}
+
           {albums.map((album) => (
             <div key={album.id} className="mb-20 bg-gradient-to-r from-black to-sky-900/20 rounded-lg p-8">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -178,7 +203,7 @@ export default function Music(): React.ReactElement {
                           trackUrl={track.trackUrl}
                           onFinish={() => handleTrackFinish(index)}
                           onPlay={() => handleTrackPlay(index)}
-                          isNext={index === currentTrackIndex}
+                          isNext={index === currentlyPlaying}
                           shouldStop={currentlyPlaying !== null && currentlyPlaying !== index}
                           hasBeenPlayed={playedTracks.has(index)}
                         />
@@ -216,7 +241,7 @@ export default function Music(): React.ReactElement {
         </div>
       </section>
 
-      {/* Latest Release Call-to-Action - Updated colors */}
+      {/* Latest Release Call-to-Action */}
       <section className="py-20 px-4 bg-sky-900/20">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500">
