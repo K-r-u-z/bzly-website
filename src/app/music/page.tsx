@@ -83,8 +83,13 @@ export default function Music(): React.ReactElement {
       // Format MongoDB data
       const dbAlbums = data.map((album: any) => ({
         ...album,
-        id: album._id,
-        tracks: album.tracks.sort((a: any, b: any) => a.order - b.order)
+        id: album._id.toString(),
+        _id: album._id.toString(),
+        tracks: album.tracks.sort((a: any, b: any) => a.order - b.order).map((track: any) => ({
+          ...track,
+          id: track._id.toString(),
+          _id: track._id.toString()
+        }))
       }))
 
       // Combine default and MongoDB albums, sorted by year (newest first)

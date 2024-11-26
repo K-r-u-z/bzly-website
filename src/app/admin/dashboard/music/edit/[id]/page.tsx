@@ -29,7 +29,13 @@ export default function EditAlbum({
       const data = await response.json()
       setAlbum({
         ...data,
-        id: data._id
+        id: data._id.toString(),
+        _id: data._id.toString(),
+        tracks: data.tracks.map((track: any) => ({
+          ...track,
+          id: track._id.toString(),
+          _id: track._id.toString()
+        }))
       })
     } catch (err) {
       setError('Failed to load album')

@@ -62,7 +62,8 @@ export default function News(): React.ReactElement {
       // Format MongoDB data
       const dbArticles = data.map((item: any) => ({
         ...item,
-        id: item._id,
+        id: item._id.toString(),
+        _id: item._id.toString(),
         date: new Date(item.date).toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'long',

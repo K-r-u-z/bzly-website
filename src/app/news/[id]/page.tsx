@@ -87,7 +87,8 @@ export default function NewsArticle({
       
       setArticle({
         ...data,
-        id: data._id,
+        id: data._id.toString(),
+        _id: data._id.toString(),
         date: new Date(data.date).toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'long',

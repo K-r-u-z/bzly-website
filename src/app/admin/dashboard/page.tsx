@@ -25,8 +25,8 @@ export default function AdminDashboard(): React.ReactElement {
       const data = await response.json()
       const formattedData = data.map((item: any) => ({
         ...item,
-        id: item._id,
-        _id: item._id,
+        id: item._id.toString(),
+        _id: item._id.toString(),
         date: new Date(item.date).toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'long',
@@ -49,8 +49,8 @@ export default function AdminDashboard(): React.ReactElement {
       const data = await response.json()
       const formattedData = data.map((album: any) => ({
         ...album,
-        id: album._id,
-        _id: album._id
+        id: album._id.toString(),
+        _id: album._id.toString()
       }))
       setAlbums(formattedData)
     } catch (err) {

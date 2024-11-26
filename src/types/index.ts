@@ -2,8 +2,8 @@ import type { INews, IAlbum, ITrack, IStreamingLinks } from './mongodb'
 import { Types } from 'mongoose'
 
 export interface NewsItem {
-  id: string | Types.ObjectId
-  _id?: string | Types.ObjectId
+  id: string
+  _id?: string
   title: string
   content: string
   excerpt: string
@@ -15,8 +15,8 @@ export interface NewsItem {
 }
 
 export interface Album {
-  id: string | Types.ObjectId
-  _id?: string | Types.ObjectId
+  id: string
+  _id?: string
   title: string
   year: string
   coverArt: string
@@ -27,8 +27,8 @@ export interface Album {
 }
 
 export interface Track {
-  id?: string | Types.ObjectId
-  _id?: string | Types.ObjectId
+  id?: string
+  _id?: string
   title: string
   duration: string
   trackUrl: string
