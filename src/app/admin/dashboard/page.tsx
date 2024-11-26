@@ -155,7 +155,7 @@ export default function AdminDashboard(): React.ReactElement {
               </thead>
               <tbody className="divide-y divide-sky-900/30">
                 {newsItems.map((item) => (
-                  <tr key={item.id} className="hover:bg-sky-900/10">
+                  <tr key={item.id.toString()} className="hover:bg-sky-900/10">
                     <td className="px-6 py-4 text-sm text-gray-300">{item.title}</td>
                     <td className="px-6 py-4 text-sm text-gray-400">{item.date}</td>
                     <td className="px-6 py-4">
@@ -176,7 +176,7 @@ export default function AdminDashboard(): React.ReactElement {
                         Edit
                       </button>
                       <button
-                        onClick={() => handleDelete(item.id)}
+                        onClick={() => handleDelete(item.id.toString())}
                         className="text-red-400 hover:text-red-300"
                       >
                         Delete
@@ -215,7 +215,7 @@ export default function AdminDashboard(): React.ReactElement {
                 </thead>
                 <tbody className="divide-y divide-sky-900/30">
                   {albums?.map((album) => (
-                    <tr key={album.id} className="hover:bg-sky-900/10">
+                    <tr key={album.id.toString()} className="hover:bg-sky-900/10">
                       <td className="px-6 py-4 text-sm text-gray-300">{album.title}</td>
                       <td className="px-6 py-4 text-sm text-gray-400">{album.year}</td>
                       <td className="px-6 py-4 text-sm text-gray-400">{album.tracks.length} tracks</td>
@@ -227,7 +227,7 @@ export default function AdminDashboard(): React.ReactElement {
                           Edit
                         </button>
                         <button
-                          onClick={() => handleDeleteAlbum(album.id)}
+                          onClick={() => handleDeleteAlbum(album.id.toString())}
                           className="text-red-400 hover:text-red-300"
                         >
                           Delete
