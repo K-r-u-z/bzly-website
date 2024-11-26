@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import PageHero from '@/components/PageHero'
 import TrackPlayer from '@/components/TrackPlayer'
@@ -21,7 +20,7 @@ const defaultAlbum: Album = {
     { 
       title: "INTRO - Skit",
       duration: "0:48",
-      trackUrl: "https://soundcloud.com/kruzbeats/intro-skit?in=kruzbeats/sets/the-resurrection&si=2c994c8221304454bda373c982e01e01&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing",
+      trackUrl: "https://soundcloud.com/kruzbeats/intro-skit",
       order: 0
     },
     { 
@@ -67,8 +66,8 @@ export default function Music(): React.ReactElement {
   const [albums, setAlbums] = useState<Album[]>([defaultAlbum])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string>('')
-  const [currentlyPlaying, setCurrentlyPlaying] = useState<number | null>(null)
-  const [playedTracks, setPlayedTracks] = useState<Set<number>>(new Set())
+  const [currentlyPlaying, setCurrentlyPlaying] = useState<{ albumIndex: number; trackIndex: number } | null>(null)
+  const [playedTracks, setPlayedTracks] = useState<Set<string>>(new Set())
   const [isExpanded, setIsExpanded] = useState(false)
 
   useEffect(() => {
@@ -102,14 +101,14 @@ export default function Music(): React.ReactElement {
     }
   }
 
-  const handleTrackPlay = (index: number) => {
-    setCurrentlyPlaying(index)
-    setPlayedTracks(prev => new Set(prev).add(index))
+  const handleTrackPlay = (albumIndex: number, trackIndex: number) => {
+    setCurrentlyPlaying({ albumIndex, trackIndex })
+    setPlayedTracks(prev => new Set(prev).add(`${albumIndex}-${trackIndex}`))
   }
 
-  const handleTrackFinish = (index: number) => {
-    if (index < albums[0].tracks.length - 1) {
-      setCurrentlyPlaying(index + 1)
+  const handleTrackFinish = (albumIndex: number, trackIndex: number) => {
+    if (trackIndex < albums[albumIndex].tracks.length - 1) {
+      setCurrentlyPlaying({ albumIndex, trackIndex: trackIndex + 1 })
     } else {
       setCurrentlyPlaying(null)
     }
@@ -119,9 +118,11 @@ export default function Music(): React.ReactElement {
     setIsExpanded(!isExpanded)
   }
 
-  const shouldRenderTrack = (index: number) => {
+  const shouldRenderTrack = (albumIndex: number, trackIndex: number) => {
     if (isExpanded) return true
-    return index < 3 || index === currentlyPlaying || playedTracks.has(index)
+    return trackIndex < 3 || 
+      (currentlyPlaying?.albumIndex === albumIndex && currentlyPlaying?.trackIndex === trackIndex) || 
+      playedTracks.has(`${albumIndex}-${trackIndex}`)
   }
 
   return (
@@ -140,17 +141,15 @@ export default function Music(): React.ReactElement {
             </div>
           )}
 
-          {albums.map((album) => (
-            <div key={album.id} className="mb-20 bg-gradient-to-r from-black to-sky-900/20 rounded-lg p-8">
+          {albums.map((album, albumIndex) => (
+            <div key={album.id.toString()} className="mb-20 bg-gradient-to-r from-black to-sky-900/20 rounded-lg p-8">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* Album Cover */}
                 <div className="relative aspect-square rounded-lg overflow-hidden">
-                  <Image
+                  <img
                     src={album.coverArt}
                     alt={album.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                   />
                 </div>
 
@@ -195,17 +194,21 @@ export default function Music(): React.ReactElement {
                   {/* Track List with Players */}
                   <div className="space-y-2">
                     <h3 className="text-xl font-bold mb-4">Tracks</h3>
-                    {album.tracks.map((track, index) => (
-                      <div key={index} className={shouldRenderTrack(index) ? 'block' : 'hidden'}>
+                    {album.tracks.map((track, trackIndex) => (
+                      <div 
+                        key={trackIndex} 
+                        className={shouldRenderTrack(albumIndex, trackIndex) ? 'block' : 'hidden'}
+                      >
                         <TrackPlayer
                           title={track.title}
                           duration={track.duration}
                           trackUrl={track.trackUrl}
-                          onFinish={() => handleTrackFinish(index)}
-                          onPlay={() => handleTrackPlay(index)}
-                          isNext={index === currentlyPlaying}
-                          shouldStop={currentlyPlaying !== null && currentlyPlaying !== index}
-                          hasBeenPlayed={playedTracks.has(index)}
+                          onFinish={() => handleTrackFinish(albumIndex, trackIndex)}
+                          onPlay={() => handleTrackPlay(albumIndex, trackIndex)}
+                          isNext={currentlyPlaying?.albumIndex === albumIndex && currentlyPlaying?.trackIndex === trackIndex}
+                          shouldStop={currentlyPlaying !== null && 
+                            (currentlyPlaying.albumIndex !== albumIndex || currentlyPlaying.trackIndex !== trackIndex)}
+                          hasBeenPlayed={playedTracks.has(`${albumIndex}-${trackIndex}`)}
                         />
                       </div>
                     ))}

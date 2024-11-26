@@ -11,10 +11,15 @@ interface Cached {
   promise: Promise<typeof mongoose> | null
 }
 
-let cached: Cached = global.mongoose
+// Use a namespace declaration to properly extend the global object
+declare global {
+  var mongoose: Cached | undefined
+}
 
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null }
+const cached: Cached = global.mongoose || { conn: null, promise: null }
+
+if (!global.mongoose) {
+  global.mongoose = cached
 }
 
 async function connectDB() {

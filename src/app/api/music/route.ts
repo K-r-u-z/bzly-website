@@ -6,7 +6,12 @@ export async function GET() {
   try {
     await connectDB()
     const albums = await Album.find().sort({ createdAt: -1 })
-    return NextResponse.json(albums)
+    
+    // Add cache headers for better performance
+    const response = NextResponse.json(albums)
+    response.headers.set('Cache-Control', 's-maxage=60, stale-while-revalidate')
+    
+    return response
   } catch (error) {
     console.error('Failed to fetch albums:', error)
     return NextResponse.json(

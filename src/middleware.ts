@@ -1,34 +1,50 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { jwtVerify } from 'jose'
 
-export function middleware(request: NextRequest) {
-  // Get the pathname of the request (e.g. /admin/dashboard)
+export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
-
-  // Define paths that are protected (require authentication)
   const isProtectedRoute = path.startsWith('/admin/dashboard')
-
-  // Get the token from the request cookies
   const token = request.cookies.get('adminToken')?.value
 
-  // If the route is protected and there's no token,
-  // redirect to the login page
-  if (isProtectedRoute && !token) {
-    const url = new URL('/admin', request.url)
-    return NextResponse.redirect(url)
+  if (isProtectedRoute) {
+    if (!token) {
+      return NextResponse.redirect(new URL('/admin', request.url))
+    }
+
+    try {
+      // Verify JWT token
+      await jwtVerify(
+        token,
+        new TextEncoder().encode(process.env.JWT_SECRET)
+      )
+    } catch (error) {
+      // Token is invalid or expired
+      const response = NextResponse.redirect(new URL('/admin', request.url))
+      response.cookies.delete('adminToken')
+      return response
+    }
   }
 
-  // If the user is logged in and trying to access the login page,
-  // redirect them to the dashboard
+  // Redirect logged-in users away from login page
   if (path === '/admin' && token) {
-    const url = new URL('/admin/dashboard', request.url)
-    return NextResponse.redirect(url)
+    try {
+      await jwtVerify(
+        token,
+        new TextEncoder().encode(process.env.JWT_SECRET)
+      )
+      return NextResponse.redirect(new URL('/admin/dashboard', request.url))
+    } catch (error) {
+      // Token is invalid, clear it
+      const response = NextResponse.next()
+      response.cookies.delete('adminToken')
+      return response
+    }
   }
 
   return NextResponse.next()
 }
 
-// Configure which paths the middleware should run on
 export const config = {
-  matcher: '/admin/:path*'
+  matcher: ['/admin/:path*']
 } 
