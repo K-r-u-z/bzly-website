@@ -4,7 +4,8 @@ const nextConfig = {
     domains: [
       'localhost', 
       'w.soundcloud.com',
-      'res.cloudinary.com'
+      'res.cloudinary.com',
+      'bzly.fowhl.mongodb.net'
     ],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60,

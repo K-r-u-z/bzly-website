@@ -4,18 +4,21 @@ import Album from '@/models/Album'
 
 export async function GET() {
   try {
+    console.log('📡 Attempting to connect to MongoDB...')
     await connectDB()
-    const albums = await Album.find().sort({ createdAt: -1 })
+    console.log('✅ Connected to MongoDB, fetching albums...')
     
-    // Add cache headers for better performance
+    const albums = await Album.find().sort({ createdAt: -1 })
+    console.log(`✅ Successfully fetched ${albums.length} albums`)
+    
     const response = NextResponse.json(albums)
     response.headers.set('Cache-Control', 's-maxage=60, stale-while-revalidate')
     
     return response
   } catch (error) {
-    console.error('Failed to fetch albums:', error)
+    console.error('❌ Failed to fetch albums:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch albums' },
+      { error: 'Failed to fetch albums', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }
