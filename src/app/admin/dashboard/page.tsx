@@ -32,7 +32,7 @@ export default function AdminDashboard(): React.ReactElement {
           month: 'long',
           day: 'numeric'
         })
-      }))
+      })) as NewsItem[]
       setNewsItems(formattedData)
     } catch (err) {
       setError('Failed to load news items')
@@ -50,8 +50,13 @@ export default function AdminDashboard(): React.ReactElement {
       const formattedData = data.map((album: any) => ({
         ...album,
         id: album._id.toString(),
-        _id: album._id.toString()
-      }))
+        _id: album._id.toString(),
+        tracks: album.tracks.map((track: any) => ({
+          ...track,
+          id: track._id.toString(),
+          _id: track._id.toString()
+        }))
+      })) as Album[]
       setAlbums(formattedData)
     } catch (err) {
       setError('Failed to load albums')

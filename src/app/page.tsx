@@ -9,7 +9,8 @@ import ParticlesBackground from '@/components/ParticlesBackground'
 export default function Home(): React.ReactElement {
   const newsItems: NewsItem[] = [
     {
-      id: 1,
+      id: "1",
+      _id: "1",
       title: "'The Resurrection' Album Release",
       content: "BZLY drops highly anticipated album 'The Resurrection', featuring 7 tracks of raw energy and emotion.",
       date: "November 22, 2024",
@@ -18,7 +19,8 @@ export default function Home(): React.ReactElement {
       category: 'Release'
     },
     {
-      id: 2,
+      id: "2",
+      _id: "2",
       title: "New Official Website Launch",
       content: "BZLY launches new interactive website to better connect with fans and showcase our artistic vision.",
       date: "November 23, 2024",
@@ -27,7 +29,8 @@ export default function Home(): React.ReactElement {
       category: 'Launch'
     },
     {
-      id: 3,
+      id: "3",
+      _id: "3",
       title: "What's Next for BZLY",
       content: "Exciting developments on the horizon as BZLY teases new projects and collaborations for early 2025.",
       date: "November 24, 2024",

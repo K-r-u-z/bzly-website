@@ -9,6 +9,7 @@ import type { Album } from '@/types'
 // Hard-coded default album
 const defaultAlbum: Album = {
   id: "1",
+  _id: "1",
   title: "The Resurrection",
   year: "2024",
   coverArt: "/album1.png",
@@ -18,42 +19,56 @@ const defaultAlbum: Album = {
   },
   tracks: [
     { 
+      id: "track-1",
+      _id: "track-1",
       title: "INTRO - Skit",
       duration: "0:48",
       trackUrl: "https://soundcloud.com/kruzbeats/intro-skit",
       order: 0
     },
     { 
+      id: "track-2",
+      _id: "track-2",
       title: "BIG MOVES",
       duration: "2:17",
       trackUrl: "https://soundcloud.com/kruzbeats/big-moves",
       order: 1
     },
     { 
+      id: "track-3",
+      _id: "track-3",
       title: "THE PICKUP - Skit",
       duration: "0:37",
       trackUrl: "https://soundcloud.com/kruzbeats/the-pickup-skit",
       order: 2
     },
     { 
+      id: "track-4",
+      _id: "track-4",
       title: "DID THE DASH",
       duration: "2:16",
       trackUrl: "https://soundcloud.com/kruzbeats/did-the-dash",
       order: 3
     },
     { 
+      id: "track-5",
+      _id: "track-5",
       title: "RAISED IN THE STRUGGLE",
       duration: "2:31",
       trackUrl: "https://soundcloud.com/kruzbeats/raised-in-the-struggle",
       order: 4
     },
     { 
+      id: "track-6",
+      _id: "track-6",
       title: "GOTTA BE A DAWG",
       duration: "2:13",
       trackUrl: "https://soundcloud.com/kruzbeats/gotta-be-a-dawg",
       order: 5
     },
     { 
+      id: "track-7",
+      _id: "track-7",
       title: "OUTRO - Skit",
       duration: "0:51",
       trackUrl: "https://soundcloud.com/kruzbeats/outro-skit",

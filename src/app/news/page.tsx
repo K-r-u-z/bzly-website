@@ -11,6 +11,7 @@ import type { NewsItem } from '@/types'
 const defaultNewsItems: NewsItem[] = [
   {
     id: "1",
+    _id: "1",
     title: "'The Resurrection' - A Journey of Rebirth",
     date: "November 22, 2024",
     excerpt: "BZLY and KRUZ deliver a powerful comeback album chronicling their transformative journey from adversity to triumph.",
@@ -22,6 +23,7 @@ const defaultNewsItems: NewsItem[] = [
   },
   {
     id: "2",
+    _id: "2",
     title: "New Official Website Launch",
     date: "December 1, 2024",
     excerpt: "BZLY launches new interactive website to better connect with fans.",
@@ -33,6 +35,7 @@ const defaultNewsItems: NewsItem[] = [
   },
   {
     id: "3",
+    _id: "3",
     title: "What's Next for BZLY",
     date: "December 5, 2024",
     excerpt: "Exciting developments on the horizon as BZLY teases new projects and collaborations.",

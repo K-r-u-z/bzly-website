@@ -1,12 +1,14 @@
 'use client'
 
+import React from 'react'
+
 export default function Error({
   error,
   reset,
 }: {
   error: Error & { digest?: string }
   reset: () => void
-}) {
+}): React.ReactElement {
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center">
       <div className="text-center">
