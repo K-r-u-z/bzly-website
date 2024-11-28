@@ -1,5 +1,5 @@
 # BZLY Website Roadmap
-
+# Push to vercel
 ## Overview
 This roadmap outlines the development process for the BZLY website, featuring sections for recent news, discography, media, events, merchandise, and contact. The design will prioritize a modern, unique, and responsive user experience.
 
