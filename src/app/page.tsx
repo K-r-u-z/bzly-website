@@ -1,44 +1,48 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { NewsItem } from '@/types'
 import ParticlesBackground from '@/components/ParticlesBackground'
 
 export default function Home(): React.ReactElement {
-  const newsItems: NewsItem[] = [
-    {
-      id: "1",
-      _id: "1",
-      title: "'The Resurrection' Album Release",
-      content: "BZLY drops highly anticipated album 'The Resurrection', featuring 7 tracks of raw energy and emotion.",
-      date: "November 22, 2024",
-      excerpt: "Experience the raw energy of BZLY's latest album.",
-      image: "/article1.png",
-      category: 'Release'
-    },
-    {
-      id: "2",
-      _id: "2",
-      title: "New Official Website Launch",
-      content: "BZLY launches new interactive website to better connect with fans and showcase our artistic vision.",
-      date: "November 23, 2024",
-      excerpt: "Explore the new features of BZLY's official website.",
-      image: "/article2.png",
-      category: 'Launch'
-    },
-    {
-      id: "3",
-      _id: "3",
-      title: "What's Next for BZLY",
-      content: "Exciting developments on the horizon as BZLY teases new projects and collaborations for early 2025.",
-      date: "November 24, 2024",
-      excerpt: "Discover the upcoming projects and collaborations of BZLY.",
-      image: "/article3.png",
-      category: 'Announcement'
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const response = await fetch('/api/news')
+        if (!response.ok) throw new Error('Failed to fetch news')
+        const data = await response.json()
+        
+        // Format and sort the news items
+        const formattedNews = data
+          .map((item: any) => ({
+            ...item,
+            id: item._id.toString(),
+            _id: item._id.toString(),
+            date: new Date(item.date).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })
+          }))
+          .sort((a: NewsItem, b: NewsItem) => 
+            new Date(b.date).getTime() - new Date(a.date).getTime()
+          )
+
+        setNewsItems(formattedNews)
+      } catch (error) {
+        console.error('Failed to fetch news:', error)
+      } finally {
+        setIsLoading(false)
+      }
     }
-  ];
+
+    fetchNews()
+  }, [])
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white">
@@ -92,23 +96,87 @@ export default function Home(): React.ReactElement {
           <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500">
             Latest News
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {newsItems.map((item) => (
-              <div 
-                key={item.id}
-                className="bg-gray-900/50 backdrop-blur-sm rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300 border border-sky-500/10 hover:border-sky-500/20 shadow-lg hover:shadow-sky-500/10"
-              >
-                <h3 className="text-xl font-bold mb-4">{item.title}</h3>
-                <p className="text-gray-400">{item.content}</p>
-                <Link 
-                  href="/news"
-                  className="text-sky-400 hover:text-blue-400 mt-4 inline-block transition-colors"
-                >
-                  Read More →
-                </Link>
+          <div className={`grid grid-cols-1 gap-8 ${
+            newsItems.length === 1 
+              ? 'max-w-xl mx-auto' 
+              : newsItems.length === 2 
+                ? 'md:grid-cols-2 max-w-3xl mx-auto'
+                : newsItems.length === 3
+                  ? 'md:grid-cols-3 max-w-6xl mx-auto'
+                  : 'md:grid-cols-2 max-w-6xl mx-auto'
+          }`}>
+            {isLoading ? (
+              <div className="col-span-full text-center">
+                <p className="text-gray-400">Loading news...</p>
               </div>
-            ))}
+            ) : newsItems.length > 0 ? (
+              newsItems.slice(0, 4).map((item) => (
+                <div 
+                  key={item.id}
+                  className="bg-gray-900/50 backdrop-blur-sm rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300 border border-sky-500/10 hover:border-sky-500/20 shadow-lg hover:shadow-sky-500/10 flex flex-col"
+                >
+                  {/* Article Image */}
+                  <div className="relative w-full h-48">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover"
+                    />
+                    <span 
+                      className={`absolute top-4 left-4 ${getCategoryColor(item.category)} px-4 py-1 rounded-full text-sm`}
+                    >
+                      {item.category}
+                    </span>
+                  </div>
+
+                  {/* Content Container */}
+                  <div className="p-6 flex flex-col flex-1">
+                    <h3 className="text-xl font-bold mb-4">{item.title}</h3>
+                    <p className="text-gray-400 line-clamp-3 mb-4">
+                      {item.content}
+                    </p>
+                    <Link 
+                      href={`/news/${item.id}`}
+                      className="text-sky-400 hover:text-blue-400 mt-auto inline-block transition-colors"
+                    >
+                      Read More →
+                    </Link>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="col-span-full text-center">
+                <p className="text-gray-400">No news articles available</p>
+              </div>
+            )}
           </div>
+          
+          {/* View All News button - only shows if there are more than 4 articles */}
+          {newsItems.length > 4 && (
+            <div className="mt-12 text-right">
+              <Link
+                href="/news"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white px-6 py-2 rounded-full transition-all duration-300 shadow-lg hover:shadow-sky-500/25"
+              >
+                View All News
+                <svg 
+                  className="w-4 h-4" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M9 5l7 7-7 7" 
+                  />
+                </svg>
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
@@ -155,4 +223,19 @@ export default function Home(): React.ReactElement {
       </section>
     </main>
   )
+}
+
+function getCategoryColor(category: string): string {
+  switch (category) {
+    case 'Release':
+      return 'bg-sky-600'
+    case 'Tour':
+      return 'bg-blue-600'
+    case 'Update':
+      return 'bg-sky-500'
+    case 'Launch':
+      return 'bg-green-600'
+    default:
+      return 'bg-gray-600'
+  }
 } 

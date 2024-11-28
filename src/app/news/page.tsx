@@ -7,48 +7,8 @@ import PageHero from '@/components/PageHero'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import type { NewsItem } from '@/types'
 
-// Hard-coded news items with proper date objects
-const defaultNewsItems: NewsItem[] = [
-  {
-    id: "1",
-    _id: "1",
-    title: "'The Resurrection' - A Journey of Rebirth",
-    date: "November 22, 2024",
-    excerpt: "BZLY and KRUZ deliver a powerful comeback album chronicling their transformative journey from adversity to triumph.",
-    content: `'The Resurrection' is more than just an album...`,
-    image: "/article1.png",
-    category: 'Release',
-    createdAt: new Date('2024-11-22'),
-    updatedAt: new Date('2024-11-22')
-  },
-  {
-    id: "2",
-    _id: "2",
-    title: "New Official Website Launch",
-    date: "December 1, 2024",
-    excerpt: "BZLY launches new interactive website to better connect with fans.",
-    content: "We're thrilled to announce the launch of our new official website...",
-    image: "/article2.png",
-    category: 'Launch',
-    createdAt: new Date('2024-12-01'),
-    updatedAt: new Date('2024-12-01')
-  },
-  {
-    id: "3",
-    _id: "3",
-    title: "What's Next for BZLY",
-    date: "December 5, 2024",
-    excerpt: "Exciting developments on the horizon as BZLY teases new projects and collaborations.",
-    content: "As we close out 2024, we're already hard at work on new material...",
-    image: "/article3.jpg",
-    category: 'Update',
-    createdAt: new Date('2024-12-05'),
-    updatedAt: new Date('2024-12-05')
-  }
-]
-
 export default function News(): React.ReactElement {
-  const [newsArticles, setNewsArticles] = useState<NewsItem[]>(defaultNewsItems)
+  const [newsArticles, setNewsArticles] = useState<NewsItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string>('')
 
@@ -63,7 +23,7 @@ export default function News(): React.ReactElement {
       const data = await response.json()
       
       // Format MongoDB data
-      const dbArticles = data.map((item: any) => ({
+      const formattedArticles = data.map((item: any) => ({
         ...item,
         id: item._id.toString(),
         _id: item._id.toString(),
@@ -76,12 +36,8 @@ export default function News(): React.ReactElement {
         updatedAt: new Date(item.updatedAt)
       }))
 
-      // Combine default and MongoDB articles
-      const allArticles = [...defaultNewsItems, ...dbArticles]
-
       // Sort by date in descending order (newest first)
-      // First try createdAt, fallback to parsing the date string
-      const sortedArticles = allArticles.sort((a, b) => {
+      const sortedArticles = formattedArticles.sort((a: NewsItem, b: NewsItem) => {
         const dateA = a.createdAt ? a.createdAt : new Date(a.date)
         const dateB = b.createdAt ? b.createdAt : new Date(b.date)
         return dateB.getTime() - dateA.getTime()
@@ -89,14 +45,8 @@ export default function News(): React.ReactElement {
 
       setNewsArticles(sortedArticles)
     } catch (err) {
-      console.error('Failed to load news from MongoDB, using default data:', err)
-      // Keep using default news items on error, but still sort them
-      const sortedDefaultArticles = [...defaultNewsItems].sort((a, b) => {
-        const dateA = a.createdAt ? a.createdAt : new Date(a.date)
-        const dateB = b.createdAt ? b.createdAt : new Date(b.date)
-        return dateB.getTime() - dateA.getTime()
-      })
-      setNewsArticles(sortedDefaultArticles)
+      console.error('Failed to load news:', err)
+      setError('Failed to load news articles')
     } finally {
       setIsLoading(false)
     }
@@ -120,7 +70,7 @@ export default function News(): React.ReactElement {
             </div>
           )}
 
-          <div className="grid grid-cols-1 gap-12">
+          <div className={`grid grid-cols-1 gap-12 ${newsArticles.length === 1 ? 'max-w-3xl mx-auto' : ''}`}>
             {newsArticles.map((article) => (
               <article 
                 key={article.id}

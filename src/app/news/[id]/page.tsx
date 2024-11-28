@@ -7,58 +7,6 @@ import PageHero from '@/components/PageHero'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import type { NewsItem } from '@/types'
 
-// Hard-coded news items
-const defaultNewsItems: NewsItem[] = [
-  {
-    id: "1",
-    _id: "1",
-    title: "'The Resurrection' - A Journey of Rebirth",
-    date: "November 22, 2024",
-    excerpt: "BZLY and KRUZ deliver a powerful comeback album chronicling their transformative journey from adversity to triumph.",
-    content: `'The Resurrection' is more than just an album - it's a raw, unfiltered chronicle of rebirth. 
-    BZLY's and KRUZ's comeback album takes listeners on an intense journey from hospital bed to unstoppable force, 
-    depicting the raw emotions and transformative experiences of overcoming personal and external demons. 
-    
-    The album opens with a gripping skit that sets the stage for what's to come, immediately pulling listeners 
-    into the narrative. Tracks like "Big Moves" and "Did The Dash" showcase not just musical prowess, but serve 
-    as anthems of resilience and determination. Each track peels back another layer of the journey, from breaking 
-    free of toxic relationships to embracing new beginnings.
-
-    "Raised in the Struggle" and "Gotta Be a Dawg" further cement the album's themes of perseverance and authenticity, 
-    while the strategic placement of skits throughout the project helps weave a compelling narrative that keeps 
-    listeners engaged from start to finish.
-
-    The outro offers an intriguing glimpse into what's next for BZLY and KRUZ, serving as both a conclusion to 
-    this chapter and a preview of their promising future. More than just a collection of tracks, 'The Resurrection' 
-    stands as a testament to loyalty, resilience, and the power of true artistic vision.
-
-    Available now on all major streaming platforms, this is an album that needs to be experienced from start to finish 
-    to truly appreciate its impact.`,
-    image: "/article1.png",
-    category: 'Release'
-  },
-  {
-    id: "2",
-    _id: "2",
-    title: "New Official Website Launch",
-    date: "December 1, 2024",
-    excerpt: "BZLY launches new interactive website to better connect with fans.",
-    content: "We're thrilled to announce the launch of our new official website. This platform will serve as your central hub for all things BZLY - from music releases to behind-the-scenes content. The new site features an immersive design that reflects our artistic vision, making it easier than ever to stay connected with our journey.",
-    image: "/article2.png",
-    category: 'Launch'
-  },
-  {
-    id: "3",
-    _id: "3",
-    title: "What's Next for BZLY",
-    date: "December 5, 2024",
-    excerpt: "Exciting developments on the horizon as BZLY teases new projects and collaborations.",
-    content: "As we close out 2024, we're already hard at work on new material. Expect more releases, potential collaborations, and some exciting surprises in early 2025. We're pushing our creative boundaries and can't wait to share what we've been working on. Stay tuned for more updates!",
-    image: "/article3.jpg",
-    category: 'Update'
-  }
-]
-
 export default function NewsArticle({
   params
 }: {
@@ -74,15 +22,6 @@ export default function NewsArticle({
   }, [params.id])
 
   const fetchArticle = async () => {
-    // First check if it's one of our default articles
-    const defaultArticle = defaultNewsItems.find(item => item.id === params.id)
-    if (defaultArticle) {
-      setArticle(defaultArticle)
-      setIsLoading(false)
-      return
-    }
-
-    // If not a default article, try to fetch from MongoDB
     try {
       const response = await fetch(`/api/news/${params.id}`)
       if (!response.ok) throw new Error('Failed to fetch article')
