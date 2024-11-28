@@ -87,3 +87,22 @@ This roadmap outlines the development process for the BZLY website, featuring se
 
 - [ ] **User Feedback**
   - Collect and implement user feedback for improvements.
+
+---
+## Frontend:
+- React: For a component-based, dynamic UI.
+- Next.js: For SEO-friendly, server-side rendering and routing.
+TailwindCSS: For a modern and flexible design system.
+## Backend:
+- Node.js: For a lightweight and scalable backend.
+- Express.js: For building RESTful APIs.
+
+## Database:
+MongoDB: For flexibility in managing dynamic content like news, events, and merchandise.
+- Mongoose: For schema-based interaction with MongoDB.
+
+## Hosting & Tools:
+- Vercel: For hosting the frontend (optimized for Next.js).
+- Render/Heroku: For hosting the backend.
+- Cloudinary: For managing media assets (images and videos).
+- GitHub: For version control.
