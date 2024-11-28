@@ -20,12 +20,12 @@ const nextConfig = {
   productionBrowserSourceMaps: true,
   optimizeFonts: true,
   swcMinify: true,
-  env: {
-    MONGODB_URI: process.env.MONGODB_URI,
-    JWT_SECRET: process.env.JWT_SECRET,
-    ADMIN_USERNAME: process.env.ADMIN_USERNAME,
-    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
+  experimental: {
+    serverComponentsExternalPackages: [],
+    optimizeCss: false,
   },
+  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
+  output: 'standalone',
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
@@ -33,8 +33,14 @@ const nextConfig = {
         punycode: false,
       }
     }
+    config.optimization = {
+      ...config.optimization,
+      maxInitialRequests: 25,
+      moduleIds: 'deterministic',
+    }
     return config
   },
+  poweredByHeader: false,
 }
 
 module.exports = nextConfig 
