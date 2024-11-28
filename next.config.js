@@ -4,43 +4,27 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'w.soundcloud.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'res.cloudinary.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'bzly.fowhl.mongodb.net',
+        hostname: '*',
       }
     ]
   },
   reactStrictMode: true,
-  productionBrowserSourceMaps: true,
-  optimizeFonts: true,
   swcMinify: true,
   experimental: {
-    serverComponentsExternalPackages: [],
-    optimizeCss: false,
+    tracingIgnores: ['**/.next/**', '**/node_modules/**'],
+    outputFileTracingRoot: process.env.VERCEL ? '/var/task' : undefined,
+    outputFileTracingExcludes: {
+      '*': [
+        'node_modules/@swc/core-linux-x64-gnu',
+        'node_modules/@swc/core-linux-x64-musl',
+        'node_modules/@esbuild/linux-x64',
+      ],
+    },
   },
-  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
-  output: 'standalone',
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        punycode: false,
-      }
-    }
-    config.optimization = {
-      ...config.optimization,
-      maxInitialRequests: 25,
-      moduleIds: 'deterministic',
-    }
+  webpack: (config) => {
+    config.resolve.fallback = { punycode: false }
     return config
-  },
-  poweredByHeader: false,
+  }
 }
 
 module.exports = nextConfig 

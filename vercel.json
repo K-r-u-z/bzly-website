@@ -1,23 +1,13 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next",
-      "config": {
-        "maxLambdaSize": "50mb"
-      }
-    }
-  ],
+  "buildCommand": "next build",
+  "installCommand": "npm install",
+  "framework": "nextjs",
   "env": {
     "MONGODB_URI": "@mongodb_uri",
     "JWT_SECRET": "@jwt_secret",
     "ADMIN_USERNAME": "@admin_username",
-    "ADMIN_PASSWORD": "@admin_password"
-  },
-  "build": {
-    "env": {
-      "NODE_OPTIONS": "--max-old-space-size=4096"
-    }
+    "ADMIN_PASSWORD": "@admin_password",
+    "NEXT_PUBLIC_BASE_URL": "@next_public_base_url"
   }
 } 
