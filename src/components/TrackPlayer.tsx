@@ -190,7 +190,8 @@ export default function TrackPlayer({
 
         {/* Volume and Time */}
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
+          {/* Only show volume controls on desktop */}
+          <div className="hidden md:flex items-center gap-2">
             <svg 
               className={`w-4 h-4 ${isPlaying ? 'text-sky-400' : 'text-gray-400'}`}
               fill="currentColor" 
