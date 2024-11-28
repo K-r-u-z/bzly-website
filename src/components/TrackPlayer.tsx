@@ -41,6 +41,7 @@ export default function TrackPlayer({
   const [lastPosition, setLastPosition] = useState(0)
   const [showProgress, setShowProgress] = useState(false)
   const [widget, setWidget] = useState<any>(null)
+  const [isWidgetReady, setIsWidgetReady] = useState(false)
   const iframeId = `sc-widget-${title.replace(/\s+/g, '-').toLowerCase()}`
 
   useEffect(() => {
@@ -56,6 +57,7 @@ export default function TrackPlayer({
         setWidget(newWidget)
 
         newWidget.bind(window.SC.Widget.Events.READY, () => {
+          setIsWidgetReady(true)
           newWidget.setVolume(100)
           newWidget.getDuration((duration: number) => {
             setTotalDuration(duration)
@@ -92,17 +94,18 @@ export default function TrackPlayer({
       if (script.parentNode) {
         script.parentNode.removeChild(script)
       }
+      setIsWidgetReady(false)
     }
   }, [])
 
   useEffect(() => {
-    if (isNext && widget) {
+    if (isNext && widget && isWidgetReady) {
       widget.play()
       setIsPlaying(true)
       setShowProgress(true)
       if (onPlay) onPlay()
     }
-  }, [isNext, widget])
+  }, [isNext, widget, isWidgetReady])
 
   useEffect(() => {
     if (shouldStop) {
@@ -115,7 +118,7 @@ export default function TrackPlayer({
   }, [shouldStop, widget])
 
   const togglePlay = () => {
-    if (widget) {
+    if (widget && isWidgetReady) {
       if (isPlaying) {
         widget.pause()
         setIsPlaying(false)
