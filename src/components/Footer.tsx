@@ -8,11 +8,9 @@ export default function Footer(): React.ReactElement {
     music: [
       { name: 'Latest Releases', href: '/music' },
       { name: 'Discography', href: '/music' },
-      { name: 'Music Videos', href: '/music' }
     ],
     social: [
-      { name: 'X', href: '#' },
-      { name: 'Instagram', href: '#' },
+      { name: 'X', href: 'https://x.com/peanutrb' },
       { name: 'Spotify', href: '#' },
       { name: 'Soundcloud', href: 'https://soundcloud.com/kruzbeats' }
     ],

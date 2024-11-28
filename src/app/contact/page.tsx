@@ -26,10 +26,9 @@ export default function Contact(): React.ReactElement {
   })
 
   const socialLinks: SocialLink[] = [
-    { platform: 'instagram', url: 'https://instagram.com/bzly' },
-    { platform: 'twitter', url: 'https://twitter.com/bzly' },
-    { platform: 'spotify', url: 'https://spotify.com/bzly' },
-    { platform: 'soundcloud', url: 'https://soundcloud.com/kruzbeats' }
+    { platform: 'twitter', url: 'https://twitter.com/peanutrb' },
+    { platform: 'spotify', url: '#' },
+    { platform: 'soundcloud', url: 'https://soundcloud.com/user-405939442' }
   ]
 
   const handleSubmit = (e: React.FormEvent) => {

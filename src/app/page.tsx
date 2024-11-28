@@ -201,7 +201,7 @@ export default function Home(): React.ReactElement {
                 Latest Album
               </h3>
               <p className="text-gray-400 mb-6">
-                "The Resurrection"
+                "The Resurrection"- 2024
               </p>
               <div className="flex gap-4">
                 <Link 

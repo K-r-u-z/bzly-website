@@ -31,14 +31,14 @@ export default function About(): React.ReactElement {
                 The Journey
               </h2>
               <p className="text-gray-300 mb-4">
-                BZLY emerged from the underground electronic scene, pushing the boundaries
-                of sound and musical expression. With a unique blend of electronic, ambient,
-                and experimental elements, BZLY creates immersive sonic landscapes that
-                transport listeners to new dimensions.
+                BZLY emerged from the vibrant hip-hop underground, bringing fresh perspectives
+                and raw energy to the scene. With a distinctive flow and authentic lyrics,
+                BZLY crafts stories that resonate with real-life experiences and emotions.
               </p>
               <p className="text-gray-300">
-                Each track is crafted with meticulous attention to detail, combining
-                cutting-edge production techniques with emotional depth and artistic vision.
+                Each track is a piece of the story, combining hard-hitting beats with
+                meaningful lyrics that speak truth to power and connect with listeners
+                on a personal level.
               </p>
             </div>
           </div>
@@ -49,9 +49,9 @@ export default function About(): React.ReactElement {
               Vision & Mission
             </h2>
             <p className="text-gray-300 mb-6">
-              Our mission is to push the boundaries of electronic music, creating
-              immersive experiences that challenge conventional genres and connect
-              with audiences on a deeper level.
+              Our mission is to create authentic hip-hop that tells real stories,
+              connects with people, and pushes creative boundaries while staying
+              true to the culture and its roots.
             </p>
             <Link 
               href="/music"
@@ -72,19 +72,19 @@ export default function About(): React.ReactElement {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
-                number: "50+",
-                label: "Live Shows",
-                description: "Performed across major venues and festivals"
+                number: "1",
+                label: "Albums Dropped",
+                description: "First tracks released on major platforms"
               },
               {
-                number: "1M+",
+                number: "100+",
                 label: "Monthly Listeners",
-                description: "Growing community of dedicated fans"
+                description: "Growing our community organically"
               },
               {
-                number: "10+",
-                label: "Original Releases",
-                description: "Including chart-topping singles and remixes"
+                number: "∞",
+                label: "New stories in the works",
+                description: "More coming soon!"
               }
             ].map((achievement, index) => (
               <div 
