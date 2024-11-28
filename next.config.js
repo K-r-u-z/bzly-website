@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -10,19 +11,16 @@ const nextConfig = {
   },
   reactStrictMode: true,
   swcMinify: true,
-  experimental: {
-    optimizePackageImports: ['tsparticles', 'framer-motion'],
-  },
   typescript: {
     ignoreBuildErrors: true,
   },
   eslint: {
     ignoreDuringBuilds: true,
   },
-  webpack: (config) => {
-    config.resolve.fallback = { punycode: false }
-    return config
-  }
+  experimental: {
+    optimizePackageImports: ['tsparticles', 'framer-motion']
+  },
+  output: 'standalone'
 }
 
 module.exports = nextConfig 
