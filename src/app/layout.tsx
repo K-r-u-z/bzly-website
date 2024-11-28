@@ -22,19 +22,29 @@ const jakarta = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'BZLY - Official Website',
-  description: 'Experience the future of sound with BZLY. Listen to the latest releases, including "The Resurrection" album.',
-  keywords: 'BZLY, music, electronic music, hip hop, The Resurrection',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://bzly.vercel.app'),
+  title: 'BZLY',
+  description: 'Official website of BZLY',
   openGraph: {
-    title: 'BZLY - Official Website',
-    description: 'Experience the future of sound with BZLY',
-    images: ['/og-image.jpg'],
+    title: 'BZLY',
+    description: 'Official website of BZLY',
+    url: 'https://bzly.vercel.app',
+    siteName: 'BZLY',
+    images: [
+      {
+        url: '/og-image.jpg', // Add your OG image
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'BZLY - Official Website',
-    description: 'Experience the future of sound with BZLY',
-    images: ['/og-image.jpg'],
+    title: 'BZLY',
+    description: 'Official website of BZLY',
+    images: ['/og-image.jpg'], // Same as OG image
   },
 }
 

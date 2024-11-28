@@ -1,14 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [
-      'localhost', 
-      'w.soundcloud.com',
-      'res.cloudinary.com',
-      'bzly.fowhl.mongodb.net'
-    ],
-    formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 60,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'w.soundcloud.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'bzly.fowhl.mongodb.net',
+      }
+    ]
   },
   reactStrictMode: true,
   productionBrowserSourceMaps: true,
