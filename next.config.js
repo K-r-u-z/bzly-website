@@ -17,9 +17,14 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  output: 'standalone',
   webpack: (config) => {
-    config.resolve.fallback = { punycode: false };
+    config.watchOptions = {
+      ...config.watchOptions,
+      ignored: ['**/.next/**', '**/node_modules/**', '**/.git/**']
+    };
+    config.resolve.fallback = { 
+      punycode: false 
+    };
     return config;
   }
 }

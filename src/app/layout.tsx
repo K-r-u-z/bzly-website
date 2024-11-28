@@ -1,20 +1,21 @@
 import React from 'react'
 import type { Metadata } from 'next'
 import { Outfit, Plus_Jakarta_Sans } from 'next/font/google'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
-import PageTransition from '@/components/PageTransition'
-import ErrorBoundary from '@/components/ErrorBoundary'
+import dynamic from 'next/dynamic'
 import './globals.css'
 
-// For headings and feature text
+// Dynamically import client components
+const Navbar = dynamic(() => import('@/components/Navbar'), { ssr: true })
+const Footer = dynamic(() => import('@/components/Footer'), { ssr: true })
+const PageTransition = dynamic(() => import('@/components/PageTransition'), { ssr: true })
+const ErrorBoundary = dynamic(() => import('@/components/ErrorBoundary'), { ssr: true })
+
 const outfit = Outfit({ 
   subsets: ['latin'],
   variable: '--font-outfit',
   display: 'swap',
 })
 
-// For body text
 const jakarta = Plus_Jakarta_Sans({ 
   subsets: ['latin'],
   variable: '--font-jakarta',
@@ -55,6 +56,14 @@ export default function RootLayout({
 }): React.ReactElement {
   return (
     <html lang="en">
+      <head>
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <meta name="theme-color" content="#000000" />
+      </head>
       <body className={`${outfit.variable} ${jakarta.variable} font-sans`}>
         <ErrorBoundary>
           <Navbar />
