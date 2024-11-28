@@ -1,7 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "next build",
-  "installCommand": "npm install",
+  "buildCommand": "NODE_OPTIONS='--max-old-space-size=3072' next build",
   "framework": "nextjs",
   "env": {
     "MONGODB_URI": "@mongodb_uri",
