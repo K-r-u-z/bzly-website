@@ -10,16 +10,9 @@ const nextConfig = {
   },
   reactStrictMode: true,
   swcMinify: true,
+  output: 'standalone',
   experimental: {
-    tracingIgnores: ['**/.next/**', '**/node_modules/**'],
-    outputFileTracingRoot: process.env.VERCEL ? '/var/task' : undefined,
-    outputFileTracingExcludes: {
-      '*': [
-        'node_modules/@swc/core-linux-x64-gnu',
-        'node_modules/@swc/core-linux-x64-musl',
-        'node_modules/@esbuild/linux-x64',
-      ],
-    },
+    outputFileTracing: false,
   },
   webpack: (config) => {
     config.resolve.fallback = { punycode: false }
