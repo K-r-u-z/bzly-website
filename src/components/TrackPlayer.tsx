@@ -11,6 +11,7 @@ interface TrackPlayerProps {
   isNext?: boolean
   shouldStop?: boolean
   hasBeenPlayed?: boolean
+  isLastTrack?: boolean
 }
 
 declare global {
@@ -29,7 +30,8 @@ export default function TrackPlayer({
   onPlay,
   isNext = false,
   shouldStop = false,
-  hasBeenPlayed = false
+  hasBeenPlayed = false,
+  isLastTrack = false
 }: TrackPlayerProps): React.ReactElement {
   const [isPlaying, setIsPlaying] = useState(false)
   const [volume, setVolume] = useState(100)
@@ -68,7 +70,9 @@ export default function TrackPlayer({
           setCurrentTime(duration)
           setProgress(0)
           setLastPosition(0)
-          if (onFinish) onFinish()
+          if (!isLastTrack && onFinish) {
+            onFinish()
+          }
         })
 
         newWidget.bind(window.SC.Widget.Events.PLAY_PROGRESS, (data: { currentPosition: number }) => {
@@ -96,6 +100,7 @@ export default function TrackPlayer({
       widget.play()
       setIsPlaying(true)
       setShowProgress(true)
+      if (onPlay) onPlay()
     }
   }, [isNext, widget])
 
