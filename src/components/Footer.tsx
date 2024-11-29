@@ -88,9 +88,14 @@ export default function Footer(): React.ReactElement {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-sky-900/30">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">
-              © {currentYear} BZLY. All rights reserved. Developed by Kruz.
-            </p>
+            <div className="flex flex-col items-center md:items-start space-y-2 md:space-y-0">
+              <p className="text-gray-400 text-sm">
+                © {currentYear} BZLY. All rights reserved.
+              </p>
+              <p className="text-gray-400 text-sm">
+                Developed by Kruz
+              </p>
+            </div>
             <div className="flex gap-6 mt-4 md:mt-0">
               <Link 
                 href="/privacy"

@@ -126,19 +126,21 @@ export default function News(): React.ReactElement {
           <p className="text-gray-300 mb-8">
             Subscribe to our newsletter for exclusive updates and behind-the-scenes content.
           </p>
-          <form className="max-w-md mx-auto flex gap-4">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 px-6 py-3 rounded-full bg-black/50 border border-sky-600 focus:outline-none focus:border-sky-400"
-            />
-            <button
-              type="submit"
-              className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-sky-500/25"
-            >
-              Subscribe
-            </button>
-          </form>
+          <div className="max-w-sm mx-auto">
+            <form className="flex flex-col items-center sm:flex-row sm:justify-center gap-3">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="w-full sm:w-64 px-4 py-2 rounded-full bg-black/50 border border-sky-600 focus:outline-none focus:border-sky-400"
+              />
+              <button
+                type="submit"
+                className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white px-6 py-2 rounded-full transition-all duration-300 shadow-lg hover:shadow-sky-500/25"
+              >
+                Subscribe
+              </button>
+            </form>
+          </div>
         </div>
       </section>
     </main>

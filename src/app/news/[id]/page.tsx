@@ -68,7 +68,7 @@ export default function NewsArticle({
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white">
       {/* Article Hero */}
-      <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[40vh] md:h-[60vh] flex items-center justify-center overflow-hidden">
         {/* Background Image with Blur */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm z-10" />
@@ -89,7 +89,7 @@ export default function NewsArticle({
             {article.category}
           </span>
           <h1 
-            className="text-4xl md:text-5xl font-bold mb-4"
+            className="text-3xl md:text-5xl font-bold mb-4"
             dangerouslySetInnerHTML={{ __html: article.title }}
           />
           <time className="text-gray-300">

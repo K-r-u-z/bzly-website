@@ -99,11 +99,13 @@ export default function NewsForm({ initialData, onSubmit, isLoading }: NewsFormP
             <label className="block text-sm font-medium text-gray-300 mb-2">
               Image Preview
             </label>
-            <img 
-              src={image} 
-              alt="Preview" 
-              className="max-w-md h-auto rounded-lg border border-gray-700"
-            />
+            <div className="relative w-full max-w-2xl aspect-video">
+              <img 
+                src={image} 
+                alt="Preview" 
+                className="w-full h-full object-cover rounded-lg border border-gray-700"
+              />
+            </div>
           </div>
         )}
 

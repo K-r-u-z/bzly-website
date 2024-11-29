@@ -148,24 +148,19 @@ export default function AdminDashboard(): React.ReactElement {
           )}
 
           {/* News Items Table */}
-          <div className="bg-black/50 backdrop-blur-md rounded-lg border border-sky-900/30 overflow-hidden">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-sky-900/30">
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-300">Title</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-300">Date</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-300">Category</th>
-                  <th className="px-6 py-3 text-right text-sm font-medium text-gray-300">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-sky-900/30">
-                {newsItems.map((item) => (
-                  <tr key={item.id.toString()} className="hover:bg-sky-900/10">
-                    <td className="px-6 py-4 text-sm text-gray-300">
-                      <div dangerouslySetInnerHTML={{ __html: item.title }} />
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-400">{item.date}</td>
-                    <td className="px-6 py-4">
+          <div className="bg-black/50 backdrop-blur-md rounded-lg border border-sky-900/30">
+            <div className="grid divide-y divide-sky-900/30">
+              {newsItems.map((item) => (
+                <div key={item.id.toString()} className="p-4 hover:bg-sky-900/10">
+                  <div className="flex flex-col md:flex-row md:items-center gap-4">
+                    <div className="flex-grow">
+                      <div className="mb-2">
+                        <div 
+                          className="text-lg font-medium text-gray-300"
+                          dangerouslySetInnerHTML={{ __html: item.title }}
+                        />
+                        <time className="text-sm text-gray-400">{item.date}</time>
+                      </div>
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                         ${item.category === 'Release' ? 'bg-sky-900/50 text-sky-200' :
                           item.category === 'Tour' ? 'bg-purple-900/50 text-purple-200' :
@@ -174,25 +169,31 @@ export default function AdminDashboard(): React.ReactElement {
                         }`}>
                         {item.category}
                       </span>
-                    </td>
-                    <td className="px-6 py-4 text-right text-sm">
+                    </div>
+                    <div className="flex gap-4 md:justify-end">
                       <button
                         onClick={() => router.push(`/admin/dashboard/news/edit/${item._id}`)}
-                        className="text-sky-400 hover:text-sky-300 mr-4"
+                        className="flex items-center gap-2 px-4 py-2 rounded-md bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 transition-colors"
                       >
-                        Edit
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        <span>Edit</span>
                       </button>
                       <button
                         onClick={() => handleDelete(item.id.toString())}
-                        className="text-red-400 hover:text-red-300"
+                        className="flex items-center gap-2 px-4 py-2 rounded-md bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors"
                       >
-                        Delete
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        <span>Delete</span>
                       </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Music Management Section */}
