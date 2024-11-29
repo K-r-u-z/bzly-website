@@ -133,10 +133,14 @@ export default function Home(): React.ReactElement {
 
                   {/* Content Container */}
                   <div className="p-6 flex flex-col flex-1">
-                    <h3 className="text-xl font-bold mb-4">{item.title}</h3>
-                    <p className="text-gray-400 line-clamp-3 mb-4">
-                      {item.content}
-                    </p>
+                    <h3 
+                      className="text-xl font-bold mb-4"
+                      dangerouslySetInnerHTML={{ __html: item.title }}
+                    />
+                    <div 
+                      className="text-gray-400 line-clamp-3 mb-4 prose prose-invert max-w-none"
+                      dangerouslySetInnerHTML={{ __html: item.excerpt }}
+                    />
                     <Link 
                       href={`/news/${item.id}`}
                       className="text-sky-400 hover:text-blue-400 mt-auto inline-block transition-colors"

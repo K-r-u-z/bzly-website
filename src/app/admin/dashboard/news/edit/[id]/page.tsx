@@ -31,6 +31,11 @@ export default function EditNews({
         ...data,
         id: data._id.toString(),
         _id: data._id.toString(),
+        title: data.title || '',
+        content: data.content || '',
+        excerpt: data.excerpt || '',
+        image: data.image || '',
+        category: data.category || 'Update',
         date: new Date(data.date).toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'long',
@@ -55,7 +60,10 @@ export default function EditNews({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          ...data,
+          date: new Date().toISOString()
+        }),
       })
 
       if (!response.ok) throw new Error('Failed to update news item')
@@ -92,7 +100,7 @@ export default function EditNews({
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900">
       <PageHero 
-        title={`Edit Article: ${newsItem.title}`}
+        title={`Edit Article: ${newsItem.title.replace(/<[^>]*>/g, '')}`}
         subtitle="Update news article details"
       />
       

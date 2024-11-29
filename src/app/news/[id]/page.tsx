@@ -88,9 +88,10 @@ export default function NewsArticle({
           >
             {article.category}
           </span>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            {article.title}
-          </h1>
+          <h1 
+            className="text-4xl md:text-5xl font-bold mb-4"
+            dangerouslySetInnerHTML={{ __html: article.title }}
+          />
           <time className="text-gray-300">
             {article.date}
           </time>
@@ -107,12 +108,10 @@ export default function NewsArticle({
           )}
 
           <div className="prose prose-invert prose-lg max-w-none">
-            {/* Split content into paragraphs */}
-            {article.content.split('\n').map((paragraph, index) => (
-              <p key={index} className="mb-4 text-gray-300">
-                {paragraph.trim()}
-              </p>
-            ))}
+            <div 
+              className="text-gray-300"
+              dangerouslySetInnerHTML={{ __html: article.content }}
+            />
           </div>
 
           <div className="mt-12 pt-8 border-t border-sky-900/30">
@@ -142,6 +141,8 @@ function getCategoryColor(category: NewsItem['category']): string {
       return 'bg-sky-500 text-white'
     case 'Launch':
       return 'bg-green-600 text-white'
+    case 'Announcement':
+      return 'bg-purple-600 text-white'
     default:
       return 'bg-gray-600 text-white'
   }

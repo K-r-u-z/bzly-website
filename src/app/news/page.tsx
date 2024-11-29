@@ -97,9 +97,10 @@ export default function News(): React.ReactElement {
                   <div className="p-8">
                     <div className="mb-4">
                       <time className="text-gray-400 text-sm">{article.date}</time>
-                      <h2 className="text-2xl font-bold mt-2 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500">
-                        {article.title}
-                      </h2>
+                      <h2 
+                        className="text-2xl font-bold mt-2 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500"
+                        dangerouslySetInnerHTML={{ __html: article.title }}
+                      />
                       <p className="text-gray-300 mb-6">{article.excerpt}</p>
                     </div>
                     <Link 

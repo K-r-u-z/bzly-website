@@ -161,7 +161,9 @@ export default function AdminDashboard(): React.ReactElement {
               <tbody className="divide-y divide-sky-900/30">
                 {newsItems.map((item) => (
                   <tr key={item.id.toString()} className="hover:bg-sky-900/10">
-                    <td className="px-6 py-4 text-sm text-gray-300">{item.title}</td>
+                    <td className="px-6 py-4 text-sm text-gray-300">
+                      <div dangerouslySetInnerHTML={{ __html: item.title }} />
+                    </td>
                     <td className="px-6 py-4 text-sm text-gray-400">{item.date}</td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
