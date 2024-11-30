@@ -12,10 +12,6 @@ const nextConfig = {
           {
             key: 'Cache-Control',
             value: 'no-store, must-revalidate'
-          },
-          {
-            key: 'Access-Control-Allow-Origin',
-            value: '*'
           }
         ],
       },
@@ -30,6 +26,32 @@ const nextConfig = {
         },
       ],
     }
+  },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        has: [
+          {
+            type: 'host',
+            value: 'bzly.info',
+          },
+        ],
+        destination: 'https://www.bzly.info',
+        permanent: true,
+      },
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'bzly.info',
+          },
+        ],
+        destination: 'https://www.bzly.info/:path*',
+        permanent: true,
+      }
+    ]
   }
 }
 
