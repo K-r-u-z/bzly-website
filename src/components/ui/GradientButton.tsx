@@ -1,32 +1,43 @@
 'use client'
 
 import Link from 'next/link'
-import { ButtonHTMLAttributes } from 'react';
+import { ReactNode } from 'react'
 
-export interface GradientButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
-  className?: string;
+export interface GradientButtonProps {
+  children: ReactNode
+  className?: string
+  href?: string
+  onClick?: () => void
+  type?: 'button' | 'submit'
+  disabled?: boolean
 }
 
-export default function GradientButton({ 
-  children, 
-  className = '', 
-  ...props 
+export default function GradientButton({
+  children,
+  className = '',
+  href,
+  onClick,
+  type = 'button',
+  disabled = false
 }: GradientButtonProps) {
+  const baseClasses = `bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white px-6 py-2 rounded-full transition-all duration-300 ${className}`
+
+  if (href) {
+    return (
+      <Link href={href} className={baseClasses}>
+        {children}
+      </Link>
+    )
+  }
+
   return (
     <button
-      className={`
-        relative px-6 py-2 
-        bg-gradient-to-r from-sky-400 via-blue-500 to-cyan-500
-        text-white font-medium rounded-lg
-        transition-all duration-200
-        hover:scale-[1.02] hover:shadow-lg
-        disabled:opacity-50 disabled:cursor-not-allowed
-        ${className}
-      `}
-      {...props}
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={`${baseClasses} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
     >
       {children}
     </button>
-  );
+  )
 } 

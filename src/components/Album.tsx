@@ -31,7 +31,8 @@ export default function Album({ album }: AlbumProps): React.ReactElement {
           title={track.title}
           duration={track.duration}
           trackUrl={track.trackUrl}
-          onFinish={handleTrackFinish}
+          albumId={album.id}
+          onFinish={() => handleTrackFinish()}
           onPlay={() => handleTrackPlay(index)}
           isNext={currentTrackIndex === index}
           shouldStop={currentTrackIndex !== index && currentTrackIndex !== -1}
