@@ -7,20 +7,28 @@ export async function POST(request: Request) {
     await connectDB()
     const { email } = await request.json()
 
-    const subscriber = await Newsletter.findOne({ email })
-    if (!subscriber) {
+    if (!email) {
+      return NextResponse.json(
+        { error: 'Email is required' },
+        { status: 400 }
+      )
+    }
+
+    const result = await Newsletter.findOneAndUpdate(
+      { email: email.toLowerCase() },
+      { $set: { isSubscribed: false } }
+    )
+
+    if (!result) {
       return NextResponse.json(
         { error: 'Email not found' },
         { status: 404 }
       )
     }
 
-    subscriber.isSubscribed = false
-    await subscriber.save()
-
-    return NextResponse.json({ message: 'Successfully unsubscribed' })
+    return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Newsletter unsubscribe error:', error)
+    console.error('Unsubscribe error:', error)
     return NextResponse.json(
       { error: 'Failed to unsubscribe' },
       { status: 500 }
