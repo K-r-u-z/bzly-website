@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import PageHero from '@/components/PageHero'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import type { NewsItem, Album } from '@/types'
+import Link from 'next/link'
 
 export default function AdminDashboard(): React.ReactElement {
   const [newsItems, setNewsItems] = useState<NewsItem[]>([])
@@ -113,6 +114,11 @@ export default function AdminDashboard(): React.ReactElement {
     }
   }
 
+  const handleSendResponse = () => {
+    // For now, just navigate to email preview
+    router.push('/admin/email-preview')
+  }
+
   if (isLoading) return <LoadingSpinner />
 
   return (
@@ -134,17 +140,23 @@ export default function AdminDashboard(): React.ReactElement {
             </div>
           </div>
 
-          {/* Email Management Section */}
-          <h2 className="text-2xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500">
-            Email Management
-          </h2>
-          <div className="mb-12">
-            <button
-              onClick={() => router.push('/admin/dashboard/email')}
-              className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white px-6 py-2 rounded-full transition-all duration-300"
-            >
-              Send Email Response
-            </button>
+          {/* Email Management */}
+          <div className="bg-black/20 rounded-lg p-6 mb-8">
+            <h2 className="text-2xl font-bold mb-4">Email Management</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Link 
+                href="/admin/email-preview"
+                className="flex items-center justify-center gap-2 p-4 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white rounded-lg transition-all duration-300"
+              >
+                <span className="text-lg">Email Template Preview</span>
+              </Link>
+              <Link
+                href="/admin/dashboard/email"
+                className="flex items-center justify-center gap-2 p-4 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white rounded-lg transition-all duration-300"
+              >
+                <span className="text-lg">Send Email Response</span>
+              </Link>
+            </div>
           </div>
 
           {/* News Management Section */}
