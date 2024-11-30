@@ -134,6 +134,19 @@ export default function AdminDashboard(): React.ReactElement {
             </div>
           </div>
 
+          {/* Email Management Section */}
+          <h2 className="text-2xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500">
+            Email Management
+          </h2>
+          <div className="mb-12">
+            <button
+              onClick={() => router.push('/admin/dashboard/email')}
+              className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white px-6 py-2 rounded-full transition-all duration-300"
+            >
+              Send Email Response
+            </button>
+          </div>
+
           {/* News Management Section */}
           <h2 className="text-2xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500">
             News Management

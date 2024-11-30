@@ -17,6 +17,19 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store',
+          },
+        ],
+      },
+    ]
+  },
   webpack: (config) => {
     config.watchOptions = {
       ...config.watchOptions,
