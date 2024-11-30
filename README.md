@@ -18,6 +18,14 @@ A modern, responsive website built for musicians/bands using Next.js 14, featuri
 - Cover art management
 - Release date tracking
 
+### Contact System
+- Fully functional contact form with email integration
+- Subject categorization (Booking, Press, General inquiries)
+- Automated email notifications via Resend
+- Custom domain email support
+- Social media integration
+- Success/error state handling
+
 ### Admin Dashboard
 - Secure JWT authentication
 - Content management interface
@@ -71,6 +79,8 @@ A modern, responsive website built for musicians/bands using Next.js 14, featuri
     - ADMIN_PASSWORD=your-admin-password
     - MONGODB_URI=your-mongodb-connection-string
     - NEXT_PUBLIC_BASE_URL=http://localhost:3000
+    - RESEND_API_KEY=your-resend-api-key
+    - CONTACT_EMAIL=your-email@example.com
 
 4. Start the development server:
 - npm run dev
@@ -158,6 +168,7 @@ For support:
 - MongoDB Atlas
 - React Quill
 - Open source community
+- Resend
 
 ---
 
