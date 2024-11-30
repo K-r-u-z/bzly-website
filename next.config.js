@@ -26,9 +26,29 @@ const nextConfig = {
             key: 'Cache-Control',
             value: 'no-store',
           },
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
         ],
       },
     ]
+  },
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: '/api/:path*',
+          destination: '/api/:path*',
+          has: [
+            {
+              type: 'host',
+              value: '(?:^|.+\.)bzly\.info$',
+            },
+          ],
+        },
+      ],
+    }
   },
   webpack: (config) => {
     config.watchOptions = {
