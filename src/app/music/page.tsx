@@ -6,6 +6,7 @@ import PageHero from '@/components/PageHero'
 import TrackPlayer from '@/components/TrackPlayer'
 import type { Album } from '@/types'
 import Image from 'next/image'
+import NewsletterForm from '@/components/NewsletterForm'
 
 export default function Music(): React.ReactElement {
   const [albums, setAlbums] = useState<Album[]>([])
@@ -215,8 +216,8 @@ export default function Music(): React.ReactElement {
         </div>
       </section>
 
-      {/* Newsletter Section - Reduce top padding on mobile */}
-      <section className="pt-8 md:pt-20 pb-20 px-4 bg-sky-900/10">
+      {/* Newsletter Section */}
+      <section className="py-20 px-4 bg-sky-900/10">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-sky-400">
             Stay Updated
@@ -224,21 +225,7 @@ export default function Music(): React.ReactElement {
           <p className="text-gray-300 mb-8">
             Subscribe to our newsletter for exclusive updates and behind-the-scenes content.
           </p>
-          <div className="max-w-sm mx-auto">
-            <form className="flex flex-col items-center sm:flex-row sm:justify-center gap-3">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="w-full sm:w-64 px-4 py-2 rounded-full bg-black/50 border border-sky-600 focus:outline-none focus:border-sky-400"
-              />
-              <button
-                type="submit"
-                className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-sky-500/25"
-              >
-                Subscribe
-              </button>
-            </form>
-          </div>
+          <NewsletterForm />
         </div>
       </section>
     </main>

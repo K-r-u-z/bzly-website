@@ -44,4 +44,12 @@ export interface IUser extends Document {
   role: 'admin'
   createdAt: Date
   updatedAt: Date
+}
+
+export interface INewsletter {
+  email: string
+  isSubscribed: boolean
+  subscribedAt: Date
+  createdAt: Date
+  updatedAt: Date
 } 
