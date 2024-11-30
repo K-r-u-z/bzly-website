@@ -6,8 +6,9 @@ interface TrackPlayerProps {
   title: string
   duration: string
   trackUrl: string
-  onFinish?: () => void
-  onPlay?: () => void
+  albumId: string
+  onFinish?: (albumId: string) => void
+  onPlay?: (albumId: string) => void
   isNext?: boolean
   shouldStop?: boolean
   hasBeenPlayed?: boolean
@@ -26,6 +27,7 @@ export default function TrackPlayer({
   title, 
   duration, 
   trackUrl,
+  albumId,
   onFinish,
   onPlay,
   isNext = false,
@@ -73,7 +75,7 @@ export default function TrackPlayer({
           setProgress(0)
           setLastPosition(0)
           if (!isLastTrack && onFinish) {
-            onFinish()
+            onFinish(albumId)
           }
         })
 
@@ -103,7 +105,7 @@ export default function TrackPlayer({
       widget.play()
       setIsPlaying(true)
       setShowProgress(true)
-      if (onPlay) onPlay()
+      if (onPlay) onPlay(albumId)
     }
   }, [isNext, widget, isWidgetReady])
 
@@ -129,7 +131,7 @@ export default function TrackPlayer({
         widget.play()
         setIsPlaying(true)
         setShowProgress(true)
-        if (onPlay) onPlay()
+        if (onPlay) onPlay(albumId)
       }
     }
   }

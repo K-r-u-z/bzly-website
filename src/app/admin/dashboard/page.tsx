@@ -124,11 +124,24 @@ export default function AdminDashboard(): React.ReactElement {
       
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
-          {/* Header with Actions */}
+          {/* Admin Warning */}
+          <div className="mb-8 p-4 bg-yellow-500/10 border border-yellow-500/50 rounded-lg text-yellow-500">
+            <div className="flex items-center gap-3">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <span className="font-medium">Warning: This page is restricted to administrators only.</span>
+            </div>
+          </div>
+
+          {/* News Management Section */}
+          <h2 className="text-2xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500">
+            News Management
+          </h2>
           <div className="flex justify-between items-center mb-8">
             <button
               onClick={() => router.push('/admin/dashboard/news/create')}
-              className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white px-6 py-2 rounded-full transition-all duration-300"
+              className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white px-6 py-2 rounded-full transition-all duration-300"
             >
               Create New Article
             </button>
@@ -201,50 +214,51 @@ export default function AdminDashboard(): React.ReactElement {
             <h2 className="text-2xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500">
               Music Management
             </h2>
+            <button
+              onClick={() => router.push('/admin/dashboard/music/create')}
+              className="mb-6 bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white px-6 py-2 rounded-full transition-all duration-300"
+            >
+              Add New Album
+            </button>
             
-            <div className="bg-black/50 backdrop-blur-md rounded-lg border border-sky-900/30 overflow-hidden">
-              <div className="p-6">
-                <button
-                  onClick={() => router.push('/admin/dashboard/music/create')}
-                  className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white px-6 py-2 rounded-full transition-all duration-300"
-                >
-                  Add New Album
-                </button>
-              </div>
-
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-sky-900/30">
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-300">Album</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-300">Year</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-300">Tracks</th>
-                    <th className="px-6 py-3 text-right text-sm font-medium text-gray-300">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-sky-900/30">
-                  {albums?.map((album) => (
-                    <tr key={album.id.toString()} className="hover:bg-sky-900/10">
-                      <td className="px-6 py-4 text-sm text-gray-300">{album.title}</td>
-                      <td className="px-6 py-4 text-sm text-gray-400">{album.year}</td>
-                      <td className="px-6 py-4 text-sm text-gray-400">{album.tracks.length} tracks</td>
-                      <td className="px-6 py-4 text-right text-sm">
+            <div className="bg-black/50 backdrop-blur-md rounded-lg border border-sky-900/30">
+              <div className="grid divide-y divide-sky-900/30">
+                {albums?.map((album) => (
+                  <div key={album.id.toString()} className="p-4 hover:bg-sky-900/10">
+                    <div className="flex flex-col md:flex-row md:items-center gap-4">
+                      <div className="flex-grow">
+                        <div className="mb-2">
+                          <div className="text-lg font-medium text-gray-300">{album.title}</div>
+                          <div className="text-sm text-gray-400">{album.year}</div>
+                        </div>
+                        <span className="text-sm text-gray-400">
+                          {album.tracks.length} tracks
+                        </span>
+                      </div>
+                      <div className="flex gap-4 md:justify-end">
                         <button
                           onClick={() => router.push(`/admin/dashboard/music/edit/${album._id}`)}
-                          className="text-sky-400 hover:text-sky-300 mr-4"
+                          className="flex items-center gap-2 px-4 py-2 rounded-md bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 transition-colors"
                         >
-                          Edit
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                          </svg>
+                          <span>Edit</span>
                         </button>
                         <button
                           onClick={() => handleDeleteAlbum(album.id.toString())}
-                          className="text-red-400 hover:text-red-300"
+                          className="flex items-center gap-2 px-4 py-2 rounded-md bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors"
                         >
-                          Delete
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                          <span>Delete</span>
                         </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

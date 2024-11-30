@@ -41,7 +41,7 @@ export default function PageHero({
       
       {/* Content */}
       <div className="z-30 text-center px-4 py-20 max-w-4xl mx-auto">
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-blue-500 to-cyan-500 leading-[1.4] pb-4">
+        <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500 leading-[1.4] pb-4">
           {title}
         </h1>
         {subtitle && (

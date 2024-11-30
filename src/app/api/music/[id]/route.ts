@@ -35,17 +35,22 @@ export async function PUT(
     await connectDB()
     const body = await request.json()
 
-    // Add order to tracks
-    if (body.tracks) {
-      body.tracks = body.tracks.map((track: any, index: number) => ({
-        ...track,
-        order: index
-      }))
+    // Clean up track data before updating
+    const cleanedTracks = body.tracks?.map((track: any) => ({
+      title: track.title,
+      duration: track.duration,
+      trackUrl: track.trackUrl,
+      order: track.order
+    })) || []
+
+    const updateData = {
+      ...body,
+      tracks: cleanedTracks
     }
 
     const album = await Album.findByIdAndUpdate(
       params.id,
-      body,
+      updateData,
       { new: true, runValidators: true }
     )
 

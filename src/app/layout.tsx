@@ -64,7 +64,10 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <meta name="theme-color" content="#000000" />
       </head>
-      <body className={`${outfit.variable} ${jakarta.variable} font-sans`}>
+      <body 
+        className={`${outfit.variable} ${jakarta.variable} font-sans`}
+        key="main-layout"
+      >
         <ErrorBoundary>
           <Navbar />
           <PageTransition>

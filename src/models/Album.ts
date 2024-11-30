@@ -1,7 +1,6 @@
-import mongoose, { Schema } from 'mongoose'
-import type { IAlbum, ITrack, IStreamingLinks } from '@/types/mongodb'
+import mongoose from 'mongoose'
 
-const TrackSchema = new Schema<ITrack>({
+const trackSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true
@@ -18,17 +17,9 @@ const TrackSchema = new Schema<ITrack>({
     type: Number,
     required: true
   }
-}, {
-  timestamps: true
-})
+}, { timestamps: true })
 
-const StreamingLinksSchema = new Schema<IStreamingLinks>({
-  spotify: String,
-  apple: String,
-  soundcloud: String
-})
-
-const AlbumSchema = new Schema<IAlbum>({
+const albumSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true
@@ -41,10 +32,14 @@ const AlbumSchema = new Schema<IAlbum>({
     type: String,
     required: true
   },
-  tracks: [TrackSchema],
-  streamingLinks: StreamingLinksSchema
-}, {
-  timestamps: true
-})
+  streamingLinks: {
+    spotify: String,
+    apple: String,
+    soundcloud: String
+  },
+  tracks: [trackSchema]
+}, { timestamps: true })
 
-export default mongoose.models.Album || mongoose.model<IAlbum>('Album', AlbumSchema) 
+const Album = mongoose.models.Album || mongoose.model('Album', albumSchema)
+
+export default Album 

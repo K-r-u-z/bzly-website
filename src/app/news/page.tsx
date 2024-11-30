@@ -71,7 +71,7 @@ export default function News(): React.ReactElement {
           )}
 
           <div className={`grid grid-cols-1 gap-12 ${newsArticles.length === 1 ? 'max-w-3xl mx-auto' : ''}`}>
-            {newsArticles.map((article) => (
+            {newsArticles.map((article, index) => (
               <article 
                 key={article.id}
                 className="bg-gradient-to-r from-black to-sky-900/20 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
@@ -85,6 +85,7 @@ export default function News(): React.ReactElement {
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
                       className="object-cover"
+                      priority={index < 2}
                     />
                     <span 
                       className={`absolute top-4 left-4 ${getCategoryColor(article.category)} px-4 py-1 rounded-full text-sm`}
@@ -118,9 +119,9 @@ export default function News(): React.ReactElement {
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-20 px-4 bg-sky-900/20">
+      <section className="py-20 px-4 bg-sky-900/10">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500">
+          <h2 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-sky-400">
             Stay Updated
           </h2>
           <p className="text-gray-300 mb-8">
@@ -135,7 +136,7 @@ export default function News(): React.ReactElement {
               />
               <button
                 type="submit"
-                className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white px-6 py-2 rounded-full transition-all duration-300 shadow-lg hover:shadow-sky-500/25"
+                className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-sky-500/25"
               >
                 Subscribe
               </button>

@@ -3,46 +3,73 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import type { NewsItem } from '@/types'
+import type { NewsItem, Album } from '@/types'
 import ParticlesBackground from '@/components/ParticlesBackground'
 
 export default function Home(): React.ReactElement {
   const [newsItems, setNewsItems] = useState<NewsItem[]>([])
+  const [latestAlbum, setLatestAlbum] = useState<Album | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string>('')
 
   useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const response = await fetch('/api/news')
-        if (!response.ok) throw new Error('Failed to fetch news')
-        const data = await response.json()
-        
-        // Format and sort the news items
-        const formattedNews = data
-          .map((item: any) => ({
-            ...item,
-            id: item._id.toString(),
-            _id: item._id.toString(),
-            date: new Date(item.date).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            })
-          }))
-          .sort((a: NewsItem, b: NewsItem) => 
-            new Date(b.date).getTime() - new Date(a.date).getTime()
-          )
-
-        setNewsItems(formattedNews)
-      } catch (error) {
-        console.error('Failed to fetch news:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchNews()
+    fetchNewsItems()
+    fetchLatestAlbum()
   }, [])
+
+  const fetchNewsItems = async () => {
+    try {
+      const response = await fetch('/api/news')
+      if (!response.ok) throw new Error('Failed to fetch news')
+      const data = await response.json()
+      
+      // Format and sort the news items
+      const formattedNews = data
+        .map((item: any) => ({
+          ...item,
+          id: item._id.toString(),
+          _id: item._id.toString(),
+          date: new Date(item.date).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })
+        }))
+        .sort((a: NewsItem, b: NewsItem) => 
+          new Date(b.date).getTime() - new Date(a.date).getTime()
+        )
+
+      setNewsItems(formattedNews)
+    } catch (error) {
+      console.error('Failed to fetch news:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const fetchLatestAlbum = async () => {
+    try {
+      const response = await fetch('/api/music')
+      if (!response.ok) throw new Error('Failed to fetch albums')
+      const data = await response.json()
+      
+      // Format and sort albums by year (newest first)
+      const albums = data.map((album: any) => ({
+        ...album,
+        id: album._id.toString(),
+        _id: album._id.toString()
+      })).sort((a: Album, b: Album) => 
+        parseInt(b.year) - parseInt(a.year)
+      )
+
+      // Set the latest album (first in the sorted array)
+      if (albums.length > 0) {
+        setLatestAlbum(albums[0])
+      }
+    } catch (err) {
+      console.error('Failed to load latest album:', err)
+    }
+  }
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white">
@@ -83,19 +110,21 @@ export default function Home(): React.ReactElement {
           </p>
           <Link 
             href="/music"
-            className="inline-block bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-sky-500/25"
+            className="inline-block bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-sky-500/25"
           >
             Latest Release
           </Link>
         </div>
       </section>
 
-      {/* Latest News Section */}
-      <section className="py-20 px-4 bg-gradient-to-b from-gray-900 to-black">
+      {/* News Section */}
+      <section className="py-20 px-4 bg-gradient-to-b from-gray-900 via-black to-black">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500">
-            Latest News
-          </h2>
+          <div className="text-center mb-24">
+            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500 relative after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-32 after:h-1 after:bg-gradient-to-r after:from-sky-400 after:to-blue-500 after:rounded-full pb-4">
+              Latest News
+            </h2>
+          </div>
           <div className={`grid grid-cols-1 gap-8 ${
             newsItems.length === 1 
               ? 'max-w-xl mx-auto' 
@@ -184,45 +213,56 @@ export default function Home(): React.ReactElement {
         </div>
       </section>
 
-      {/* Featured Music Section */}
-      <section className="py-20 px-4 bg-black/50 backdrop-blur-md relative">
+      {/* Featured Music */}
+      <section className="py-12 md:py-32 px-4 bg-gradient-to-b from-black to-sky-900/10">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500">
-            Featured Music
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="relative w-full aspect-square rounded-xl overflow-hidden shadow-2xl">
-              <Image
-                src="/album-cover.png"
-                alt="Album Cover"
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover hover:scale-105 transition-transform duration-700"
-              />
-            </div>
-            <div className="flex flex-col justify-center">
-              <h3 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500">
-                Latest Album
-              </h3>
-              <p className="text-gray-400 mb-6">
-                "The Resurrection"- 2024
-              </p>
-              <div className="flex gap-4">
-                <Link 
-                  href="/music"
-                  className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white px-6 py-2 rounded-full transition-all duration-300 shadow-lg hover:shadow-sky-500/25"
-                >
-                  Listen Now
-                </Link>
-                <Link 
-                  href="/music"
-                  className="border border-sky-500/50 hover:bg-sky-500/10 px-6 py-2 rounded-full transition-all duration-300"
-                >
-                  View All
-                </Link>
+          <div className="text-center mb-24">
+            <h2 className="inline-block text-3xl md:text-4xl font-bold mb-12 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500 relative after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-48 after:h-1 after:bg-gradient-to-r after:from-sky-400 after:to-blue-500 after:rounded-full pb-4">
+              Featured Music
+            </h2>
+          </div>
+          
+          {latestAlbum ? (
+            <div className="flex flex-col md:flex-row gap-12">
+              {/* Album Cover */}
+              <div className="w-full md:w-1/2">
+                <Image
+                  src={latestAlbum.coverArt}
+                  alt={latestAlbum.title}
+                  width={600}
+                  height={600}
+                  className="w-full rounded-lg shadow-2xl shadow-sky-500/10 hover:scale-105 transition-transform duration-500"
+                  priority
+                />
+              </div>
+
+              {/* Album Info */}
+              <div className="w-full md:w-1/2 flex flex-col justify-center">
+                <h3 className="text-lg font-medium text-sky-400 mb-2">Latest Album</h3>
+                <h4 className="text-2xl font-bold mb-2 text-gray-200">
+                  {latestAlbum.title} - {latestAlbum.year}
+                </h4>
+                <div className="flex gap-4 mt-4">
+                  <Link 
+                    href="/music"
+                    className="bg-sky-500 hover:bg-sky-600 text-white px-6 py-2 rounded-full transition-colors"
+                  >
+                    Listen Now
+                  </Link>
+                  <Link 
+                    href="/music"
+                    className="border border-sky-500 text-sky-400 hover:bg-sky-500/10 px-6 py-2 rounded-full transition-colors"
+                  >
+                    View All
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="text-center text-gray-400">
+              No albums available
+            </div>
+          )}
         </div>
       </section>
     </main>
