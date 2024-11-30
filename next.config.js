@@ -1,21 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    domains: ['bzly.info', 'www.bzly.info', 'bzly-website.vercel.app'],
     unoptimized: true,
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '*',
-      }
-    ]
-  },
-  reactStrictMode: true,
-  swcMinify: true,
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
   },
   async headers() {
     return [
@@ -24,12 +11,12 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'no-store',
+            value: 'no-store, must-revalidate'
           },
           {
             key: 'Access-Control-Allow-Origin',
-            value: '*',
-          },
+            value: '*'
+          }
         ],
       },
     ]
@@ -40,25 +27,9 @@ const nextConfig = {
         {
           source: '/api/:path*',
           destination: '/api/:path*',
-          has: [
-            {
-              type: 'host',
-              value: '(?:^|.+\.)bzly\.info$',
-            },
-          ],
         },
       ],
     }
-  },
-  webpack: (config) => {
-    config.watchOptions = {
-      ...config.watchOptions,
-      ignored: ['**/.next/**', '**/node_modules/**', '**/.git/**']
-    };
-    config.resolve.fallback = { 
-      punycode: false 
-    };
-    return config;
   }
 }
 
