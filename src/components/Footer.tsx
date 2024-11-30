@@ -15,7 +15,7 @@ export default function Footer(): React.ReactElement {
       { name: 'Soundcloud', href: 'https://soundcloud.com/kruzbeats' }
     ],
     contact: [
-      { name: 'Email', href: '/contact' },
+      { name: 'contact@bzly.info', href: '/contact' },
     ]
   }
 
@@ -73,12 +73,12 @@ export default function Footer(): React.ReactElement {
             <ul className="space-y-2">
               {sections.contact.map((link) => (
                 <li key={link.name}>
-                  <a 
+                  <Link 
                     href={link.href}
                     className="text-gray-400 hover:text-sky-400 transition-colors"
                   >
                     {link.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

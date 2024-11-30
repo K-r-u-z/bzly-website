@@ -36,7 +36,8 @@ export default function Contact(): React.ReactElement {
               <div className="space-y-6">
                 <div>
                   <h3 className="text-xl font-bold mb-2">Email</h3>
-                  <p className="text-gray-300">contact.kruzbeats@gmail.com</p>
+                  <p className="text-gray-300">contact@bzly.info</p>
+                  <p className="text-sm text-gray-400 mt-1">We aim to respond to all inquiries within 24 hours or less.</p>
                 </div>
                 
                 {/* Social Links */}
