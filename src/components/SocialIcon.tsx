@@ -9,7 +9,7 @@ export default function SocialIcon({ platform, className = '' }: SocialIconProps
   return (
     <div className={`relative w-10 h-10 ${className}`}>
       <Image
-        src={`/icons/${platform}.svg`}
+        src={`/icons/${platform}.png`}
         alt={platform}
         fill
         className="object-contain"
