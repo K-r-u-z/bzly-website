@@ -180,7 +180,21 @@ export default function AlbumForm({ initialData, onSubmit, isLoading }: AlbumFor
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    await onSubmit(formData)
+    
+    // Clean up the data before submission
+    const cleanedData = {
+      ...formData,
+      tracks: formData.tracks?.map(track => ({
+        title: track.title,
+        duration: track.duration,
+        trackUrl: track.trackUrl,
+        order: track.order || 0,
+        id: track.id,
+        _id: track.id // Use the same id for both fields
+      }))
+    }
+    
+    await onSubmit(cleanedData)
   }
 
   const handleChange = (

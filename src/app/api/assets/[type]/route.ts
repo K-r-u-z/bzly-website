@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 
+export const dynamic = 'force-dynamic'
+
 // SVG content for each asset
 const assets = {
   logo: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
@@ -35,10 +37,9 @@ export async function GET(
       return new NextResponse('Asset not found', { status: 404 })
     }
 
-    // Add width and height parameters
-    const { searchParams } = new URL(request.url)
-    const width = searchParams.get('width') || '48'
-    const height = searchParams.get('height') || '48'
+    // Default dimensions if not specified
+    const width = '48'
+    const height = '48'
 
     // Add width and height attributes to the SVG
     const svgWithDimensions = svg.replace('<svg', `<svg width="${width}" height="${height}"`)
