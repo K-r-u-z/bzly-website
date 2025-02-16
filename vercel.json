@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "buildCommand": "NODE_OPTIONS='--max_old_space_size=3072 --no-warnings' next build",
+  "framework": "nextjs",
+  "env": {
+    "MONGODB_URI": "@mongodb_uri",
+    "JWT_SECRET": "@jwt_secret",
+    "ADMIN_USERNAME": "@admin_username",
+    "ADMIN_PASSWORD": "@admin_password",
+    "NEXT_PUBLIC_BASE_URL": "@next_public_base_url"
+  }
+} 

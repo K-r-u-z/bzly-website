@@ -17,6 +17,7 @@ export default function Navbar(): React.ReactElement {
     { name: 'Music', path: '/music' },
     { name: 'News', path: '/news' },
     { name: 'Contact', path: '/contact' },
+    { name: 'Join Discord (Get GTA-VI Status)', path: 'https://discord.com/invite/yFdpd8Vyk8', external: true },
   ]
 
   useEffect(() => {
@@ -75,24 +76,36 @@ export default function Navbar(): React.ReactElement {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.1 * (index + 1) }}
             >
-              <Link
-                href={item.path}
-                className={`relative px-2 py-1 group transition-colors ${
-                  isActive(item.path)
-                    ? 'text-sky-400'
-                    : 'text-white hover:text-sky-400'
-                }`}
-              >
-                {item.name}
-                <span className="absolute bottom-0 left-1/2 w-0 h-[2px] bg-sky-400 group-hover:w-full group-hover:left-0 transition-all duration-300" />
-                {isActive(item.path) && (
-                  <motion.div
-                    className="absolute bottom-0 left-0 w-full h-[2px] bg-sky-400"
-                    layoutId="underline"
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                  />
-                )}
-              </Link>
+              {item.external ? (
+                <a
+                  href={item.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`relative px-2 py-1 group transition-colors text-white hover:text-sky-400`}
+                >
+                  {item.name}
+                  <span className="absolute bottom-0 left-1/2 w-0 h-[2px] bg-sky-400 group-hover:w-full group-hover:left-0 transition-all duration-300" />
+                </a>
+              ) : (
+                <Link
+                  href={item.path}
+                  className={`relative px-2 py-1 group transition-colors ${
+                    isActive(item.path)
+                      ? 'text-sky-400'
+                      : 'text-white hover:text-sky-400'
+                  }`}
+                >
+                  {item.name}
+                  <span className="absolute bottom-0 left-1/2 w-0 h-[2px] bg-sky-400 group-hover:w-full group-hover:left-0 transition-all duration-300" />
+                  {isActive(item.path) && (
+                    <motion.div
+                      className="absolute bottom-0 left-0 w-full h-[2px] bg-sky-400"
+                      layoutId="underline"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
+                </Link>
+              )}
             </motion.div>
           ))}
         </div>
@@ -143,17 +156,29 @@ export default function Navbar(): React.ReactElement {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: 0.1 * index }}
               >
-                <Link
-                  href={item.path}
-                  className={`block px-3 py-2 text-base transition-all duration-300 ${
-                    isActive(item.path)
-                      ? 'text-sky-400 bg-sky-900/20'
-                      : 'text-white hover:text-sky-400 hover:bg-sky-900/10'
-                  }`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
+                {item.external ? (
+                  <a
+                    href={item.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block px-3 py-2 text-base text-white hover:text-sky-400 hover:bg-sky-900/10 transition-all duration-300"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.name}
+                  </a>
+                ) : (
+                  <Link
+                    href={item.path}
+                    className={`block px-3 py-2 text-base transition-all duration-300 ${
+                      isActive(item.path)
+                        ? 'text-sky-400 bg-sky-900/20'
+                        : 'text-white hover:text-sky-400 hover:bg-sky-900/10'
+                    }`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                )}
               </motion.div>
             ))}
           </div>
