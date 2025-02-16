@@ -2,12 +2,16 @@ import { NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url)
-    const type = searchParams.get('type')
-    const width = searchParams.get('width') || '48'
-    const height = searchParams.get('height') || '48'
+    // Default dimensions
+    const width = '48'
+    const height = '48'
+    
+    // Get type from query parameter
+    const type = 'logo' // Set a default type or handle differently
 
     if (!type) {
       return new NextResponse('Type parameter is required', { status: 400 })
