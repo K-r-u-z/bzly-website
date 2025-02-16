@@ -17,7 +17,7 @@ export default function Navbar(): React.ReactElement {
     { name: 'Music', path: '/music' },
     { name: 'News', path: '/news' },
     { name: 'Contact', path: '/contact' },
-    { name: 'Join Discord (Get GTA-VI Status)', path: 'https://discord.com/invite/yFdpd8Vyk8', external: true },
+    { name: 'Discord (Get GTA-VI Status)', path: 'https://discord.com/invite/yFdpd8Vyk8', external: true },
   ]
 
   useEffect(() => {
