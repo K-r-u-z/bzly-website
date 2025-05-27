@@ -53,14 +53,20 @@ export default function Home(): React.ReactElement {
       if (!response.ok) throw new Error('Failed to fetch albums')
       const data = await response.json()
       
-      // Format and sort albums by year (newest first)
+      // Format and sort albums by year and creation date (newest first)
       const albums = data.map((album: any) => ({
         ...album,
         id: album._id.toString(),
-        _id: album._id.toString()
-      })).sort((a: Album, b: Album) => 
-        parseInt(b.year) - parseInt(a.year)
-      )
+        _id: album._id.toString(),
+        createdAt: new Date(album.createdAt || new Date())
+      })).sort((a: any, b: any) => {
+        // First sort by year
+        const yearComparison = parseInt(b.year) - parseInt(a.year)
+        if (yearComparison !== 0) return yearComparison
+        
+        // If years are the same, sort by creation date
+        return b.createdAt.getTime() - a.createdAt.getTime()
+      })
 
       // Set the latest album (first in the sorted array)
       if (albums.length > 0) {
@@ -85,6 +91,9 @@ export default function Home(): React.ReactElement {
             sizes="100vw"
             className="object-cover"
             priority
+            quality={90}
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQdHx4eHRoaHSQtJSEkMjU1LS0yMi4qLjgyPj4+Oj4+Oj4+Oj4+Oj4+Oj4+Oj4+Oj7/2wBDAR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
           />
         </div>
 
@@ -103,6 +112,7 @@ export default function Home(): React.ReactElement {
               sizes="(max-width: 768px) 300px, 500px"
               className="object-contain"
               priority
+              quality={100}
             />
           </div>
           <p className="text-xl md:text-2xl mb-8 text-gray-300">
@@ -139,7 +149,7 @@ export default function Home(): React.ReactElement {
                 <p className="text-gray-400">Loading news...</p>
               </div>
             ) : newsItems.length > 0 ? (
-              newsItems.slice(0, 4).map((item) => (
+              newsItems.slice(0, 4).map((item, index) => (
                 <div 
                   key={item.id}
                   className="bg-gray-900/50 backdrop-blur-sm rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300 border border-sky-500/10 hover:border-sky-500/20 shadow-lg hover:shadow-sky-500/10 flex flex-col"
@@ -152,6 +162,8 @@ export default function Home(): React.ReactElement {
                       fill
                       sizes="(max-width: 768px) 100vw, 33vw"
                       className="object-cover"
+                      quality={85}
+                      loading={index < 2 ? "eager" : "lazy"}
                     />
                     <span 
                       className={`absolute top-4 left-4 ${getCategoryColor(item.category)} px-4 py-1 rounded-full text-sm`}

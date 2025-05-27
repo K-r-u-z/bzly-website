@@ -34,7 +34,12 @@ async function connectDB() {
         maxPoolSize: 10,
         serverSelectionTimeoutMS: 5000,
         socketTimeoutMS: 45000,
-        family: 4
+        family: 4,
+        retryWrites: true,
+        retryReads: true,
+        connectTimeoutMS: 10000,
+        heartbeatFrequencyMS: 10000,
+        minPoolSize: 5
       }
 
       cached.promise = mongoose.connect(MONGODB_URI, opts)
@@ -56,6 +61,19 @@ async function connectDB() {
       console.error('❌ Failed to establish MongoDB connection:', e)
       throw e
     }
+
+    // Add connection event handlers
+    mongoose.connection.on('error', (err) => {
+      console.error('❌ MongoDB connection error:', err)
+    })
+
+    mongoose.connection.on('disconnected', () => {
+      console.log('⚠️ MongoDB disconnected')
+    })
+
+    mongoose.connection.on('reconnected', () => {
+      console.log('✅ MongoDB reconnected')
+    })
 
     return cached.conn
   } catch (error) {

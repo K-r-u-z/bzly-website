@@ -4,9 +4,35 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import PageHero from '@/components/PageHero'
 import TrackPlayer from '@/components/TrackPlayer'
-import type { Album } from '@/types'
 import Image from 'next/image'
 import NewsletterForm from '@/components/NewsletterForm'
+
+interface Track {
+  id: string
+  _id: string
+  title: string
+  order: number
+  duration: string
+  trackUrl: string
+}
+
+interface Album {
+  id: string
+  _id: string
+  title: string
+  year: string
+  coverArt: string
+  tracks: Track[]
+  createdAt: Date
+  streamingLinks: {
+    spotify?: string
+    appleMusic?: string
+    youtube?: string
+    soundcloud?: string
+    bandcamp?: string
+    amazonMusic?: string
+  }
+}
 
 export default function Music(): React.ReactElement {
   const [albums, setAlbums] = useState<Album[]>([])
@@ -34,17 +60,23 @@ export default function Music(): React.ReactElement {
         ...album,
         id: album._id.toString(),
         _id: album._id.toString(),
+        createdAt: new Date(album.createdAt || new Date()),
         tracks: album.tracks.sort((a: any, b: any) => a.order - b.order).map((track: any) => ({
           ...track,
           id: track._id.toString(),
           _id: track._id.toString()
         }))
-      }))
+      })) as Album[]
 
-      // Sort albums by year (newest first)
-      const sortedAlbums = dbAlbums.sort((a: Album, b: Album) => 
-        parseInt(b.year) - parseInt(a.year)
-      )
+      // Sort albums by year (newest first) and then by creation date (newest first)
+      const sortedAlbums = dbAlbums.sort((a, b) => {
+        // First sort by year
+        const yearComparison = parseInt(b.year) - parseInt(a.year)
+        if (yearComparison !== 0) return yearComparison
+        
+        // If years are the same, sort by creation date
+        return b.createdAt.getTime() - a.createdAt.getTime()
+      })
 
       setAlbums(sortedAlbums)
     } catch (err) {
@@ -112,7 +144,7 @@ export default function Music(): React.ReactElement {
           {albums.map((album, index) => (
             <div key={album.id.toString()} className="mb-20 bg-gradient-to-r from-black to-sky-900/20 rounded-lg p-8">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {/* Album Cover - Fix the width to take full space */}
+                {/* Album Cover */}
                 <div className="relative w-full">
                   <Image
                     src={album.coverArt}
@@ -121,6 +153,8 @@ export default function Music(): React.ReactElement {
                     height={600}
                     className="w-full rounded-lg shadow-2xl shadow-sky-500/10 hover:scale-105 transition-transform duration-500"
                     priority={index === 0}
+                    quality={90}
+                    loading={index === 0 ? "eager" : "lazy"}
                   />
                 </div>
 
@@ -143,9 +177,9 @@ export default function Music(): React.ReactElement {
                         Spotify
                       </Link>
                     )}
-                    {album.streamingLinks.apple && (
+                    {album.streamingLinks.appleMusic && (
                       <Link 
-                        href={album.streamingLinks.apple}
+                        href={album.streamingLinks.appleMusic}
                         className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full transition-colors"
                       >
                         Apple Music

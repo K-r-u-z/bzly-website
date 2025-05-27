@@ -1,49 +1,83 @@
-import { NextResponse } from 'next/server'
+import { headers } from 'next/headers'
 import connectDB from '@/lib/mongodb'
 import Album from '@/models/Album'
 
 export async function GET() {
   try {
-    console.log('📡 Attempting to connect to MongoDB...')
+    console.log('Connecting to MongoDB...')
     await connectDB()
-    console.log('✅ Connected to MongoDB, fetching albums...')
-    
-    const albums = await Album.find().sort({ createdAt: -1 })
-    console.log(`✅ Successfully fetched ${albums.length} albums`)
-    
-    const response = NextResponse.json(albums)
-    response.headers.set('Cache-Control', 's-maxage=60, stale-while-revalidate')
-    
-    return response
+    console.log('Connected to MongoDB')
+
+    const albums = await Album.find().sort({ year: -1 })
+    console.log(`Found ${albums.length} albums`)
+
+    return new Response(JSON.stringify(albums), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store, must-revalidate'
+      }
+    })
   } catch (error) {
-    console.error('❌ Failed to fetch albums:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch albums', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
+    console.error('Error fetching albums:', error)
+    return new Response(
+      JSON.stringify({ error: 'Failed to fetch albums' }),
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
     )
   }
 }
 
 export async function POST(request: Request) {
   try {
+    console.log('Connecting to MongoDB...')
     await connectDB()
-    const body = await request.json()
+    console.log('Connected to MongoDB')
 
-    // Add order to tracks
-    if (body.tracks) {
-      body.tracks = body.tracks.map((track: any, index: number) => ({
-        ...track,
-        order: index
-      }))
+    const body = await request.json()
+    console.log('Received request body:', body)
+
+    // Remove custom track IDs before creating the album
+    const tracks = body.tracks.map((track: any) => ({
+      title: track.title,
+      duration: track.duration,
+      trackUrl: track.trackUrl,
+      order: track.order
+    }))
+
+    const albumData = {
+      ...body,
+      tracks
     }
 
-    const album = await Album.create(body)
-    return NextResponse.json(album, { status: 201 })
+    console.log('Creating album with data:', albumData)
+    const album = await Album.create(albumData)
+    console.log('Album created successfully:', album)
+
+    return new Response(JSON.stringify(album), {
+      status: 201,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store, must-revalidate'
+      }
+    })
   } catch (error) {
-    console.error('Failed to create album:', error)
-    return NextResponse.json(
-      { error: 'Failed to create album' },
-      { status: 500 }
+    console.error('Error creating album:', error)
+    return new Response(
+      JSON.stringify({ 
+        error: 'Failed to create album',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      }),
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
     )
   }
 } 

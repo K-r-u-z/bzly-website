@@ -87,6 +87,8 @@ export default function News(): React.ReactElement {
                       sizes="(max-width: 768px) 100vw, 50vw"
                       className="object-cover"
                       priority={index < 2}
+                      quality={85}
+                      loading={index < 2 ? "eager" : "lazy"}
                     />
                     <span 
                       className={`absolute top-4 left-4 ${getCategoryColor(article.category)} px-4 py-1 rounded-full text-sm`}
