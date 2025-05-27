@@ -24,6 +24,10 @@ export const authOptions: NextAuthOptions = {
       }
     })
   ],
+  pages: {
+    signIn: '/admin',
+    error: '/admin',
+  },
   session: {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60, // 30 days
@@ -42,5 +46,6 @@ export const authOptions: NextAuthOptions = {
       }
       return session
     }
-  }
+  },
+  debug: process.env.NODE_ENV === 'development',
 } 

@@ -17,7 +17,7 @@ export default function AdminLogin(): React.ReactElement {
 
   useEffect(() => {
     if (status === 'authenticated') {
-      router.push(callbackUrl)
+      router.replace(callbackUrl)
     }
   }, [status, router, callbackUrl])
 
@@ -35,11 +35,12 @@ export default function AdminLogin(): React.ReactElement {
       })
 
       if (result?.error) {
-        throw new Error(result.error)
+        setError(result.error)
+        return
       }
 
       if (result?.ok) {
-        router.push(callbackUrl)
+        router.replace(callbackUrl)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed')
