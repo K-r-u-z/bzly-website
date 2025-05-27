@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { signOut } from 'next-auth/react'
 import PageHero from '@/components/PageHero'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import type { NewsItem, Album } from '@/types'
@@ -67,7 +68,7 @@ export default function AdminDashboard(): React.ReactElement {
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' })
+      await signOut({ redirect: false })
       router.push('/admin')
     } catch (err) {
       console.error('Logout failed:', err)
@@ -122,16 +123,16 @@ export default function AdminDashboard(): React.ReactElement {
   if (isLoading) return <LoadingSpinner />
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900">
+    <main className="min-h-screen bg-gradient-to-b from-black via-red-500/20 to-black">
       <PageHero 
         title="Admin Dashboard"
         subtitle="Manage your content"
       />
       
       <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           {/* Admin Warning */}
-          <div className="mb-8 p-4 bg-yellow-500/10 border border-yellow-500/50 rounded-lg text-yellow-500">
+          <div className="mb-8 p-4 bg-black/50 border border-gray-700 rounded-lg text-gray-300">
             <div className="flex items-center gap-3">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -140,149 +141,169 @@ export default function AdminDashboard(): React.ReactElement {
             </div>
           </div>
 
-          {/* Email Management */}
-          <div className="bg-black/20 rounded-lg p-6 mb-8">
-            <h2 className="text-2xl font-bold mb-4">Email Management</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Link 
-                href="/admin/email-preview"
-                className="flex items-center justify-center gap-2 p-4 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white rounded-lg transition-all duration-300"
-              >
-                <span className="text-lg">Email Template Preview</span>
-              </Link>
-              <Link
-                href="/admin/dashboard/email"
-                className="flex items-center justify-center gap-2 p-4 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white rounded-lg transition-all duration-300"
-              >
-                <span className="text-lg">Send Email Response</span>
-              </Link>
-            </div>
-          </div>
-
-          {/* News Management Section */}
-          <h2 className="text-2xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500">
-            News Management
-          </h2>
-          <div className="flex justify-between items-center mb-8">
-            <button
-              onClick={() => router.push('/admin/dashboard/news/create')}
-              className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white px-6 py-2 rounded-full transition-all duration-300"
-            >
-              Create New Article
-            </button>
-            
-            <button
-              onClick={handleLogout}
-              className="px-6 py-2 border border-red-500 text-red-500 rounded-full hover:bg-red-500 hover:text-white transition-all duration-300"
-            >
-              Logout
-            </button>
-          </div>
-
-          {error && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-center">
-              {error}
-            </div>
-          )}
-
-          {/* News Items Table */}
-          <div className="bg-black/50 backdrop-blur-md rounded-lg border border-sky-900/30">
-            <div className="grid divide-y divide-sky-900/30">
-              {newsItems.map((item) => (
-                <div key={item.id.toString()} className="p-4 hover:bg-sky-900/10">
-                  <div className="flex flex-col md:flex-row md:items-center gap-4">
-                    <div className="flex-grow">
-                      <div className="mb-2">
-                        <div 
-                          className="text-lg font-medium text-gray-300"
-                          dangerouslySetInnerHTML={{ __html: item.title }}
-                        />
-                        <time className="text-sm text-gray-400">{item.date}</time>
-                      </div>
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                        ${item.category === 'Release' ? 'bg-sky-900/50 text-sky-200' :
-                          item.category === 'Tour' ? 'bg-purple-900/50 text-purple-200' :
-                          item.category === 'Update' ? 'bg-green-900/50 text-green-200' :
-                          'bg-gray-900/50 text-gray-200'
-                        }`}>
-                        {item.category}
-                      </span>
-                    </div>
-                    <div className="flex gap-4 md:justify-end">
-                      <button
-                        onClick={() => router.push(`/admin/dashboard/news/edit/${item._id}`)}
-                        className="flex items-center gap-2 px-4 py-2 rounded-md bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 transition-colors"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                        <span>Edit</span>
-                      </button>
-                      <button
-                        onClick={() => handleDelete(item.id.toString())}
-                        className="flex items-center gap-2 px-4 py-2 rounded-md bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                        <span>Delete</span>
-                      </button>
-                    </div>
-                  </div>
+          {/* Management Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-12">
+            {/* Admin Menu Card */}
+            <div className="md:col-span-2 bg-gradient-to-br from-black/90 to-black/95 rounded-xl p-4 border border-gray-800 hover:border-gray-700 transition-all duration-300">
+              <div className="flex flex-col h-full">
+                <div className="space-y-3">
+                  <Link 
+                    href="/admin/email-preview"
+                    className="flex items-center gap-2 p-3 bg-red-400 hover:bg-red-300 text-white rounded-lg transition-all duration-300 w-full h-12"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    <span>Send Email</span>
+                  </Link>
+                  <Link
+                    href="/admin/dashboard/headline"
+                    className="flex items-center gap-2 p-3 bg-red-400 hover:bg-red-300 text-white rounded-lg transition-all duration-300 w-full h-12"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                    <span>Edit Headline</span>
+                  </Link>
+                  <Link
+                    href="/admin/dashboard/about"
+                    className="flex items-center gap-2 p-3 bg-red-400 hover:bg-red-300 text-white rounded-lg transition-all duration-300 w-full h-12"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    <span>Edit About Me</span>
+                  </Link>
                 </div>
-              ))}
+                <div className="mt-auto pt-3">
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 p-3 bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 rounded-lg transition-all duration-300 w-full h-12"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span>Logout</span>
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* Music Management Section */}
-          <div className="mt-12">
-            <h2 className="text-2xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500">
-              Music Management
-            </h2>
-            <button
-              onClick={() => router.push('/admin/dashboard/music/create')}
-              className="mb-6 bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white px-6 py-2 rounded-full transition-all duration-300"
-            >
-              Add New Album
-            </button>
-            
-            <div className="bg-black/50 backdrop-blur-md rounded-lg border border-sky-900/30">
-              <div className="grid divide-y divide-sky-900/30">
-                {albums?.map((album) => (
-                  <div key={album.id.toString()} className="p-4 hover:bg-sky-900/10">
-                    <div className="flex flex-col md:flex-row md:items-center gap-4">
+            {/* Music Management Card */}
+            <div className="md:col-span-5 bg-gradient-to-br from-black/90 to-black/95 rounded-xl p-6 border border-gray-800 hover:border-gray-700 transition-all duration-300">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="p-3 bg-gray-800/50 rounded-lg">
+                  <svg className="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                  </svg>
+                </div>
+                <h2 className="text-xl font-bold text-white">Music Management</h2>
+              </div>
+              <div className="space-y-4">
+                <button
+                  onClick={() => router.push('/admin/dashboard/music/create')}
+                  className="w-full flex items-center gap-2 p-3 bg-red-400 hover:bg-red-300 text-white rounded-lg transition-all duration-300"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>Add New Album</span>
+                </button>
+                <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+                  {albums.map((album) => (
+                    <div key={album.id} className="flex items-center gap-4 p-3 bg-gray-800/50 rounded-lg hover:bg-gray-700/50 transition-all duration-300">
                       <div className="flex-grow">
-                        <div className="mb-2">
-                          <div className="text-lg font-medium text-gray-300">{album.title}</div>
-                          <div className="text-sm text-gray-400">{album.year}</div>
+                        <h3 className="text-white font-medium">{album.title}</h3>
+                        <div className="flex items-center gap-3 mt-1">
+                          <p className="text-gray-400 text-sm">{album.year}</p>
+                          <span className="text-gray-400 text-sm">
+                            {album.tracks.length} tracks
+                          </span>
                         </div>
-                        <span className="text-sm text-gray-400">
-                          {album.tracks.length} tracks
-                        </span>
                       </div>
-                      <div className="flex gap-4 md:justify-end">
+                      <div className="flex gap-2">
                         <button
                           onClick={() => router.push(`/admin/dashboard/music/edit/${album._id}`)}
-                          className="flex items-center gap-2 px-4 py-2 rounded-md bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 transition-colors"
+                          className="p-2 text-gray-400 hover:text-white transition-colors"
                         >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                           </svg>
-                          <span>Edit</span>
                         </button>
                         <button
                           onClick={() => handleDeleteAlbum(album.id.toString())}
-                          className="flex items-center gap-2 px-4 py-2 rounded-md bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors"
+                          className="p-2 text-gray-400 hover:text-white transition-colors"
                         >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
-                          <span>Delete</span>
                         </button>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* News Management Card */}
+            <div className="md:col-span-5 bg-gradient-to-br from-black/90 to-black/95 rounded-xl p-6 border border-gray-800 hover:border-gray-700 transition-all duration-300">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="p-3 bg-gray-800/50 rounded-lg">
+                  <svg className="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                  </svg>
+                </div>
+                <h2 className="text-xl font-bold text-white">News Management</h2>
+              </div>
+              <div className="space-y-4">
+                <button
+                  onClick={() => router.push('/admin/dashboard/news/create')}
+                  className="w-full flex items-center gap-2 p-3 bg-red-400 hover:bg-red-300 text-white rounded-lg transition-all duration-300"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>Create New Article</span>
+                </button>
+                <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+                  {newsItems.map((item) => (
+                    <div key={item.id} className="flex items-center gap-4 p-3 bg-gray-800/50 rounded-lg hover:bg-gray-700/50 transition-all duration-300">
+                      <div className="flex-grow min-w-0">
+                        <h3 className="text-white font-medium truncate" dangerouslySetInnerHTML={{ __html: item.title }} />
+                        <div className="flex items-center gap-3 mt-1">
+                          <p className="text-gray-400 text-sm">{item.date}</p>
+                          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-sm font-medium
+                            ${item.category === 'Release' ? 'bg-gray-800 text-gray-300' :
+                              item.category === 'Update' ? 'bg-gray-800 text-gray-300' :
+                              item.category === 'Announcement' ? 'bg-gray-800 text-gray-300' :
+                              item.category === 'Launch' ? 'bg-gray-800 text-gray-300' :
+                              'bg-gray-800 text-gray-300'
+                            }`}>
+                            {item.category}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex gap-2 shrink-0">
+                        <button
+                          onClick={() => router.push(`/admin/dashboard/news/edit/${item._id}`)}
+                          className="p-2 text-gray-400 hover:text-white transition-colors"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(item.id.toString())}
+                          className="p-2 text-gray-400 hover:text-white transition-colors"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

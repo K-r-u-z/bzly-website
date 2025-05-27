@@ -43,21 +43,21 @@ export default function CreateNews(): React.ReactElement {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900">
+    <main className="min-h-screen bg-gradient-to-b from-black via-black to-black">
       <PageHero 
-        title="Create News Article"
-        subtitle="Add a new article to your website"
+        title="Create Article"
+        subtitle="Add a new article to your news section"
       />
       
       <section className="py-20 px-4">
         <div className="max-w-3xl mx-auto">
           {error && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-center">
+            <div className="mb-6 p-4 bg-gray-800/50 border border-gray-700 rounded-lg text-gray-300 text-center">
               {error}
             </div>
           )}
 
-          <div className="bg-black/50 backdrop-blur-md p-8 rounded-lg border border-sky-900/30">
+          <div className="bg-black/90 backdrop-blur-md p-8 rounded-lg border border-gray-800">
             <NewsForm
               onSubmit={handleSubmit}
               isLoading={isLoading}

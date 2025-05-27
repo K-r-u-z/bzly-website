@@ -1,16 +1,15 @@
 import type { INews, IAlbum, ITrack, IStreamingLinks } from './mongodb'
 
-export interface NewsItem {
+export type NewsItem = {
   id: string
   _id: string
   title: string
   content: string
   excerpt: string
-  date: string
   image: string
-  category: 'Release' | 'Tour' | 'Update' | 'Announcement' | 'Launch'
-  createdAt?: Date
-  updatedAt?: Date
+  category: 'Release' | 'Update' | 'Announcement' | 'Launch'
+  date: string
+  inputDate?: string
 }
 
 export interface Album {
@@ -35,7 +34,5 @@ export interface Track {
 }
 
 export interface StreamingLinks {
-  spotify?: string
-  apple?: string
   soundcloud?: string
 } 

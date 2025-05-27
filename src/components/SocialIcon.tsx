@@ -1,7 +1,7 @@
 import Image from 'next/image'
 
 interface SocialIconProps {
-  platform: 'instagram' | 'twitter' | 'spotify' | 'soundcloud'
+  platform: 'instagram' | 'twitter' | 'soundcloud'
   className?: string
 }
 
@@ -11,7 +11,8 @@ export default function SocialIcon({ platform, className = '' }: SocialIconProps
       <Image
         src={`/icons/${platform}.png`}
         alt={platform}
-        fill
+        width={40}
+        height={40}
         className="object-contain"
       />
     </div>

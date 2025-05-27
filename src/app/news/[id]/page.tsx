@@ -6,12 +6,14 @@ import Image from 'next/image'
 import PageHero from '@/components/PageHero'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import type { NewsItem } from '@/types'
+import '@/styles/article.css'
 
 export default function NewsArticle({
   params
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }): React.ReactElement {
+  const resolvedParams = React.use(params)
   const [article, setArticle] = useState<NewsItem | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string>('')
@@ -19,11 +21,11 @@ export default function NewsArticle({
 
   useEffect(() => {
     fetchArticle()
-  }, [params.id])
+  }, [resolvedParams.id])
 
   const fetchArticle = async () => {
     try {
-      const response = await fetch(`/api/news/${params.id}`)
+      const response = await fetch(`/api/news/${resolvedParams.id}`)
       if (!response.ok) throw new Error('Failed to fetch article')
       const data = await response.json()
       
@@ -49,13 +51,13 @@ export default function NewsArticle({
 
   if (!article) {
     return (
-      <main className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white">
+      <main className="min-h-screen bg-gradient-to-b from-black via-red-500/20 to-black text-white">
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-red-500">Article not found</h1>
             <button
               onClick={() => router.push('/news')}
-              className="mt-4 text-sky-400 hover:text-sky-300"
+              className="mt-4 text-red-100 hover:text-red-200"
             >
               Return to News
             </button>
@@ -66,9 +68,9 @@ export default function NewsArticle({
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white">
+    <main className="min-h-screen bg-gradient-to-b from-black via-red-500/20 to-black text-white">
       {/* Article Hero */}
-      <section className="relative h-[40vh] md:h-[60vh] flex items-center justify-center overflow-hidden">
+      <section className="relative aspect-[16/9] flex items-center justify-center overflow-hidden">
         {/* Background Image with Blur */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm z-10" />
@@ -107,23 +109,28 @@ export default function NewsArticle({
             </div>
           )}
 
-          <div className="prose prose-invert prose-lg max-w-none">
+          <div className="article-content">
             <div 
-              className="text-gray-300"
               dangerouslySetInnerHTML={{ __html: article.content }}
             />
           </div>
 
-          <div className="mt-12 pt-8 border-t border-sky-900/30">
-            <button
-              onClick={() => router.push('/news')}
-              className="text-sky-400 hover:text-sky-300 flex items-center gap-2"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-              Back to News
-            </button>
+          <div className="mt-12 pt-8 border-t border-red-500/30">
+            <h2 className="text-2xl font-bold mb-4">Share This Article</h2>
+            <div className="flex gap-4">
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  alert('Link copied to clipboard!');
+                }}
+                className="text-red-100 hover:text-red-200 flex items-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                Copy Link
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -134,16 +141,14 @@ export default function NewsArticle({
 function getCategoryColor(category: NewsItem['category']): string {
   switch (category) {
     case 'Release':
-      return 'bg-sky-600 text-white'
-    case 'Tour':
-      return 'bg-blue-600 text-white'
+      return 'bg-red-100 text-white'
     case 'Update':
-      return 'bg-sky-500 text-white'
-    case 'Launch':
-      return 'bg-green-600 text-white'
+      return 'bg-red-300 text-white'
     case 'Announcement':
-      return 'bg-purple-600 text-white'
+      return 'bg-red-400 text-white'
+    case 'Launch':
+      return 'bg-red-500 text-white'
     default:
-      return 'bg-gray-600 text-white'
+      return 'bg-red-300 text-white'
   }
 }

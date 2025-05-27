@@ -1,15 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { ReactNode } from 'react'
+import { ButtonHTMLAttributes } from 'react'
 
-export interface GradientButtonProps {
-  children: ReactNode
+interface GradientButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  children: React.ReactNode
   className?: string
   href?: string
-  onClick?: () => void
-  type?: 'button' | 'submit'
-  disabled?: boolean
 }
 
 export default function GradientButton({
@@ -20,7 +17,7 @@ export default function GradientButton({
   type = 'button',
   disabled = false
 }: GradientButtonProps) {
-  const baseClasses = `bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white px-6 py-2 rounded-full transition-all duration-300 ${className}`
+  const baseClasses = `bg-red-400 hover:bg-red-300 text-white px-6 py-2 rounded-full transition-all duration-300 ${className}`
 
   if (href) {
     return (

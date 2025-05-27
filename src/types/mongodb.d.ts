@@ -7,7 +7,7 @@ export interface INews extends Document {
   excerpt: string
   date: Date
   image: string
-  category: 'Release' | 'Tour' | 'Update' | 'Announcement' | 'Launch'
+  category: 'Release' | 'Update' | 'Announcement' | 'Launch'
   createdAt: Date
   updatedAt: Date
 }
@@ -21,8 +21,6 @@ export interface ITrack {
 }
 
 export interface IStreamingLinks {
-  spotify?: string
-  apple?: string
   soundcloud?: string
 }
 

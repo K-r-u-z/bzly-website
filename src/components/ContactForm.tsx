@@ -61,7 +61,7 @@ export default function ContactForm() {
           value={formData.name}
           onChange={handleChange}
           required
-          className="w-full px-4 py-2 rounded-lg bg-black/50 border border-sky-600 focus:outline-none focus:border-sky-400"
+          className="w-full px-4 py-2 rounded-lg bg-black/50"
         />
       </div>
 
@@ -76,7 +76,7 @@ export default function ContactForm() {
           value={formData.email}
           onChange={handleChange}
           required
-          className="w-full px-4 py-2 rounded-lg bg-black/50 border border-sky-600 focus:outline-none focus:border-sky-400"
+          className="w-full px-4 py-2 rounded-lg bg-black/50"
         />
       </div>
 
@@ -90,7 +90,7 @@ export default function ContactForm() {
           value={formData.subject}
           onChange={handleChange}
           required
-          className="w-full px-4 py-2 rounded-lg bg-black/50 border border-sky-600 focus:outline-none focus:border-sky-400"
+          className="w-full px-4 py-2 rounded-lg bg-black/50"
         >
           <option value="">Select a subject</option>
           <option value="booking">Booking Inquiry</option>
@@ -110,14 +110,14 @@ export default function ContactForm() {
           onChange={handleChange}
           required
           rows={5}
-          className="w-full px-4 py-2 rounded-lg bg-black/50 border border-sky-600 focus:outline-none focus:border-sky-400"
+          className="w-full px-4 py-2 rounded-lg bg-black/50"
         />
       </div>
 
       <button
         type="submit"
         disabled={status === 'loading'}
-        className="w-full bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-sky-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-red-400 hover:bg-red-300 text-white px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-red-100/25 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {status === 'loading' ? 'Sending...' : 'Send Message'}
       </button>

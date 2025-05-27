@@ -24,60 +24,60 @@ if (!global.mongoose) {
 async function connectDB() {
   try {
     if (cached.conn) {
-      console.log('✅ Using existing MongoDB connection')
       return cached.conn
     }
 
-    if (!cached.promise) {
-      const opts = {
-        bufferCommands: false,
-        maxPoolSize: 10,
-        serverSelectionTimeoutMS: 5000,
-        socketTimeoutMS: 45000,
-        family: 4,
-        retryWrites: true,
-        retryReads: true,
-        connectTimeoutMS: 10000,
-        heartbeatFrequencyMS: 10000,
-        minPoolSize: 5
-      }
-
-      cached.promise = mongoose.connect(MONGODB_URI, opts)
-        .then((mongoose) => {
-          console.log('✅ New MongoDB connection established')
-          return mongoose
-        })
-        .catch((error) => {
-          console.error('❌ MongoDB connection error:', error)
-          cached.promise = null
-          throw error
-        })
+    const opts = {
+      bufferCommands: true,
+      maxPoolSize: 5,
+      minPoolSize: 1,
+      serverSelectionTimeoutMS: 30000,
+      socketTimeoutMS: 45000,
+      family: 4,
+      retryWrites: true,
+      retryReads: true,
+      connectTimeoutMS: 30000,
+      heartbeatFrequencyMS: 10000,
+      maxIdleTimeMS: 60000,
+      waitQueueTimeoutMS: 30000,
+      maxConnecting: 3
     }
+
+    cached.promise = mongoose.connect(MONGODB_URI, opts)
+      .then((mongoose) => {
+        return new Promise<typeof mongoose>((resolve, reject) => {
+          if (mongoose.connection.readyState === 1) {
+            resolve(mongoose)
+          } else {
+            mongoose.connection.once('connected', () => resolve(mongoose))
+            mongoose.connection.once('error', reject)
+          }
+        })
+      })
+      .catch((error) => {
+        cached.promise = null
+        throw error
+      })
 
     try {
       cached.conn = await cached.promise
     } catch (e) {
       cached.promise = null
-      console.error('❌ Failed to establish MongoDB connection:', e)
       throw e
     }
 
-    // Add connection event handlers
-    mongoose.connection.on('error', (err) => {
-      console.error('❌ MongoDB connection error:', err)
+    mongoose.connection.on('error', () => {
+      cached.conn = null
+      cached.promise = null
     })
 
     mongoose.connection.on('disconnected', () => {
-      console.log('⚠️ MongoDB disconnected')
-    })
-
-    mongoose.connection.on('reconnected', () => {
-      console.log('✅ MongoDB reconnected')
+      cached.conn = null
+      cached.promise = null
     })
 
     return cached.conn
   } catch (error) {
-    console.error('❌ MongoDB connection error:', error)
     throw error
   }
 }

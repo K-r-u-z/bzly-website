@@ -50,7 +50,7 @@ export default function CreateAlbum(): React.ReactElement {
             </div>
           )}
 
-          <div className="bg-black/50 backdrop-blur-md p-8 rounded-lg border border-sky-900/30">
+          <div className="bg-black/50 backdrop-blur-md p-8 rounded-lg border border-red-500/30">
             <AlbumForm
               onSubmit={handleSubmit}
               isLoading={isLoading}

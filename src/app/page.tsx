@@ -9,12 +9,14 @@ import ParticlesBackground from '@/components/ParticlesBackground'
 export default function Home(): React.ReactElement {
   const [newsItems, setNewsItems] = useState<NewsItem[]>([])
   const [latestAlbum, setLatestAlbum] = useState<Album | null>(null)
+  const [headline, setHeadline] = useState('...')
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string>('')
 
   useEffect(() => {
     fetchNewsItems()
     fetchLatestAlbum()
+    fetchHeadline()
   }, [])
 
   const fetchNewsItems = async () => {
@@ -77,13 +79,24 @@ export default function Home(): React.ReactElement {
     }
   }
 
+  const fetchHeadline = async () => {
+    try {
+      const response = await fetch('/api/headline')
+      if (!response.ok) throw new Error('Failed to fetch headline')
+      const data = await response.json()
+      setHeadline(data.headline)
+    } catch (err) {
+      console.error('Failed to fetch headline:', err)
+    }
+  }
+
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white">
+    <main className="min-h-screen bg-gradient-to-b from-black via-red-500/10 to-black text-white">
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image with Blur */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-md z-10" />
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-md z-10" />
           <Image
             src="/hero-background.jpg"
             alt="Background"
@@ -93,7 +106,7 @@ export default function Home(): React.ReactElement {
             priority
             quality={90}
             placeholder="blur"
-            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQdHx4eHRoaHSQtJSEkMjU1LS0yMi4qLjgyPj4+Oj4+Oj4+Oj4+Oj4+Oj4+Oj4+Oj7/2wBDAR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQdHx4eHRoaHSQtJSEkMjU1LS0yMi4qLjgyPj4+Oj4+Oj4+Oj4+Oj4+Oj4+Oj4+Oj7/2wBDAR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
           />
         </div>
 
@@ -116,11 +129,11 @@ export default function Home(): React.ReactElement {
             />
           </div>
           <p className="text-xl md:text-2xl mb-8 text-gray-300">
-            "The Resurrection - OUT NOW!"
+            {headline}
           </p>
           <Link 
             href="/music"
-            className="inline-block bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-sky-500/25"
+            className="inline-block bg-red-400 hover:bg-red-300 text-white px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-red-100/25"
           >
             Latest Release
           </Link>
@@ -128,10 +141,10 @@ export default function Home(): React.ReactElement {
       </section>
 
       {/* News Section */}
-      <section className="py-20 px-4 bg-gradient-to-b from-gray-900 via-black to-black">
+      <section className="py-20 px-4 bg-gradient-to-b from-black to-red-500/5">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-24">
-            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500 relative after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-32 after:h-1 after:bg-gradient-to-r after:from-sky-400 after:to-blue-500 after:rounded-full pb-4">
+            <h2 className="inline-block text-3xl md:text-4xl font-bold mb-12 bg-clip-text text-transparent bg-gradient-to-r from-red-100 to-red-200 relative after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-48 after:h-1 after:bg-gradient-to-r after:from-red-100 after:to-red-200 after:rounded-full pb-4">
               Latest News
             </h2>
           </div>
@@ -152,10 +165,10 @@ export default function Home(): React.ReactElement {
               newsItems.slice(0, 4).map((item, index) => (
                 <div 
                   key={item.id}
-                  className="bg-gray-900/50 backdrop-blur-sm rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300 border border-sky-500/10 hover:border-sky-500/20 shadow-lg hover:shadow-sky-500/10 flex flex-col"
+                  className="bg-black/50 backdrop-blur-sm rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300 border border-red-100/10 hover:border-red-100/20 shadow-lg hover:shadow-red-100/10 flex flex-col"
                 >
                   {/* Article Image */}
-                  <div className="relative w-full h-48">
+                  <div className="relative w-full aspect-[16/9]">
                     <Image
                       src={item.image}
                       alt={item.title}
@@ -175,16 +188,16 @@ export default function Home(): React.ReactElement {
                   {/* Content Container */}
                   <div className="p-6 flex flex-col flex-1">
                     <h3 
-                      className="text-xl font-bold mb-4"
+                      className="text-xl font-bold mb-4 text-white"
                       dangerouslySetInnerHTML={{ __html: item.title }}
                     />
                     <div 
-                      className="text-gray-400 line-clamp-3 mb-4 prose prose-invert max-w-none"
+                      className="text-gray-300 line-clamp-3 mb-4 prose prose-invert max-w-none"
                       dangerouslySetInnerHTML={{ __html: item.excerpt }}
                     />
                     <Link 
                       href={`/news/${item.id}`}
-                      className="text-sky-400 hover:text-blue-400 mt-auto inline-block transition-colors"
+                      className="text-red-100 hover:text-red-200 mt-auto inline-block transition-colors"
                     >
                       Read More →
                     </Link>
@@ -203,7 +216,7 @@ export default function Home(): React.ReactElement {
             <div className="mt-12 text-right">
               <Link
                 href="/news"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white px-6 py-2 rounded-full transition-all duration-300 shadow-lg hover:shadow-sky-500/25"
+                className="inline-flex items-center gap-2 bg-red-400 hover:bg-red-300 text-white px-6 py-2 rounded-full transition-all duration-300 shadow-lg hover:shadow-red-100/25"
               >
                 View All News
                 <svg 
@@ -226,10 +239,10 @@ export default function Home(): React.ReactElement {
       </section>
 
       {/* Featured Music */}
-      <section className="py-12 md:py-32 px-4 bg-gradient-to-b from-black to-sky-900/10">
+      <section className="py-12 md:py-32 px-4 bg-gradient-to-b from-black to-red-500/5">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-24">
-            <h2 className="inline-block text-3xl md:text-4xl font-bold mb-12 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500 relative after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-48 after:h-1 after:bg-gradient-to-r after:from-sky-400 after:to-blue-500 after:rounded-full pb-4">
+            <h2 className="inline-block text-3xl md:text-4xl font-bold mb-12 bg-clip-text text-transparent bg-gradient-to-r from-red-100 to-red-200 relative after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-48 after:h-1 after:bg-gradient-to-r after:from-red-100 after:to-red-200 after:rounded-full pb-4">
               Featured Music
             </h2>
           </div>
@@ -243,27 +256,27 @@ export default function Home(): React.ReactElement {
                   alt={latestAlbum.title}
                   width={600}
                   height={600}
-                  className="w-full rounded-lg shadow-2xl shadow-sky-500/10 hover:scale-105 transition-transform duration-500"
+                  className="w-full rounded-lg shadow-2xl shadow-red-100/10 hover:scale-105 transition-transform duration-500"
                   priority
                 />
               </div>
 
               {/* Album Info */}
               <div className="w-full md:w-1/2 flex flex-col justify-center">
-                <h3 className="text-lg font-medium text-sky-400 mb-2">Latest Album</h3>
+                <h3 className="text-lg font-medium text-red-100 mb-2">Latest Album</h3>
                 <h4 className="text-2xl font-bold mb-2 text-gray-200">
                   {latestAlbum.title} - {latestAlbum.year}
                 </h4>
                 <div className="flex gap-4 mt-4">
                   <Link 
                     href="/music"
-                    className="bg-sky-500 hover:bg-sky-600 text-white px-6 py-2 rounded-full transition-colors"
+                    className="bg-red-400 hover:bg-red-300 text-white px-6 py-2 rounded-full transition-all duration-300 shadow-lg hover:shadow-red-100/25"
                   >
                     Listen Now
                   </Link>
                   <Link 
                     href="/music"
-                    className="border border-sky-500 text-sky-400 hover:bg-sky-500/10 px-6 py-2 rounded-full transition-colors"
+                    className="border border-red-100 text-red-100 hover:bg-red-100/10 px-6 py-2 rounded-full transition-colors"
                   >
                     View All
                   </Link>
@@ -284,14 +297,14 @@ export default function Home(): React.ReactElement {
 function getCategoryColor(category: string): string {
   switch (category) {
     case 'Release':
-      return 'bg-sky-600'
-    case 'Tour':
-      return 'bg-blue-600'
+      return 'bg-red-100'
     case 'Update':
-      return 'bg-sky-500'
+      return 'bg-red-300'
+    case 'Announcement':
+      return 'bg-red-400'
     case 'Launch':
-      return 'bg-green-600'
+      return 'bg-red-500'
     default:
-      return 'bg-gray-600'
+      return 'bg-red-500/80'
   }
 } 

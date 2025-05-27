@@ -48,7 +48,7 @@ export default function UnsubscribePage() {
       />
       
       <div className="max-w-md mx-auto px-4 py-12">
-        <div className="bg-sky-900/20 rounded-lg p-8 shadow-lg border border-sky-600/20">
+        <div className="bg-red-500/20 rounded-lg p-8 shadow-lg border border-red-100/20">
           {status === 'loading' && (
             <p className="text-center text-gray-300">Processing your unsubscribe request...</p>
           )}

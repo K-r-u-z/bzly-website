@@ -39,8 +39,8 @@ export default function News(): React.ReactElement {
 
       // Sort by date in descending order (newest first)
       const sortedArticles = formattedArticles.sort((a: NewsItem, b: NewsItem) => {
-        const dateA = a.createdAt ? a.createdAt : new Date(a.date)
-        const dateB = b.createdAt ? b.createdAt : new Date(b.date)
+        const dateA = new Date(a.date)
+        const dateB = new Date(b.date)
         return dateB.getTime() - dateA.getTime()
       })
 
@@ -56,10 +56,12 @@ export default function News(): React.ReactElement {
   if (isLoading) return <LoadingSpinner />
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white">
+    <main className="min-h-screen bg-gradient-to-b from-black via-red-500/10 to-black text-white">
       <PageHero 
         title="Latest News"
         subtitle="Stay updated with BZLY"
+        titleClassName="text-white"
+        subtitleClassName="text-white"
       />
       
       {/* News Articles */}
@@ -75,17 +77,17 @@ export default function News(): React.ReactElement {
             {newsArticles.map((article, index) => (
               <article 
                 key={article.id}
-                className="bg-gradient-to-r from-black to-sky-900/20 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
+                className="bg-gradient-to-r from-black to-red-500/20 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 border border-red-100/10 hover:border-red-100/20 hover:transform hover:scale-[1.02]"
               >
                 <div className="grid md:grid-cols-2 gap-8">
                   {/* Article Image */}
-                  <div className="relative h-[300px] md:h-auto">
+                  <div className="relative w-full aspect-[16/9]">
                     <Image
                       src={article.image}
                       alt={article.title}
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-cover"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
                       priority={index < 2}
                       quality={85}
                       loading={index < 2 ? "eager" : "lazy"}
@@ -102,14 +104,14 @@ export default function News(): React.ReactElement {
                     <div className="mb-4">
                       <time className="text-gray-400 text-sm">{article.date}</time>
                       <h2 
-                        className="text-2xl font-bold mt-2 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500"
+                        className="text-2xl font-bold mt-2 mb-4 text-white group-hover:text-red-100 transition-colors"
                         dangerouslySetInnerHTML={{ __html: article.title }}
                       />
                       <p className="text-gray-300 mb-6">{article.excerpt}</p>
                     </div>
                     <Link 
                       href={`/news/${article.id}`}
-                      className="inline-flex items-center text-sky-400 hover:text-blue-400 transition-colors"
+                      className="inline-flex items-center text-red-100 hover:text-red-200 transition-colors"
                     >
                       Read More →
                     </Link>
@@ -122,9 +124,9 @@ export default function News(): React.ReactElement {
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-20 px-4 bg-sky-900/10">
+      <section className="py-20 px-4 bg-red-500/5">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-sky-400">
+          <h2 className="text-3xl font-bold mb-6 text-white">
             Stay Updated
           </h2>
           <p className="text-gray-300 mb-8">
@@ -140,14 +142,14 @@ export default function News(): React.ReactElement {
 function getCategoryColor(category: NewsItem['category']): string {
   switch (category) {
     case 'Release':
-      return 'bg-sky-600'
-    case 'Tour':
-      return 'bg-blue-600'
+      return 'bg-red-100'
     case 'Update':
-      return 'bg-sky-500'
+      return 'bg-red-300'
+    case 'Announcement':
+      return 'bg-red-400'
     case 'Launch':
-      return 'bg-green-600'
+      return 'bg-red-500'
     default:
-      return 'bg-gray-600'
+      return 'bg-red-300'
   }
 } 

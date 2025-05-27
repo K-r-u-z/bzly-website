@@ -11,7 +11,6 @@ export default function Footer(): React.ReactElement {
     ],
     social: [
       { name: 'X', href: 'https://x.com/peanutrb' },
-      { name: 'Spotify', href: '#' },
       { name: 'Soundcloud', href: 'https://soundcloud.com/kruzbeats' }
     ],
     contact: [
@@ -20,7 +19,7 @@ export default function Footer(): React.ReactElement {
   }
 
   return (
-    <footer className="bg-black/90 text-white border-t border-sky-900/30">
+    <footer className="bg-black/90 text-white border-t border-red-500/30">
       <div className="max-w-6xl mx-auto px-4 py-12">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
@@ -39,7 +38,7 @@ export default function Footer(): React.ReactElement {
                 <li key={link.name}>
                   <Link 
                     href={link.href}
-                    className="text-gray-400 hover:text-sky-400 transition-colors"
+                    className="text-gray-400 hover:text-red-100 transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -58,7 +57,7 @@ export default function Footer(): React.ReactElement {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-sky-400 transition-colors"
+                    className="text-gray-400 hover:text-red-100 transition-colors"
                   >
                     {link.name}
                   </a>
@@ -75,7 +74,7 @@ export default function Footer(): React.ReactElement {
                 <li key={link.name}>
                   <Link 
                     href={link.href}
-                    className="text-gray-400 hover:text-sky-400 transition-colors"
+                    className="text-gray-400 hover:text-red-100 transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -86,7 +85,7 @@ export default function Footer(): React.ReactElement {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-sky-900/30">
+        <div className="pt-8 border-t border-red-500/30">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex flex-col items-center md:items-start space-y-2 md:space-y-0">
               <p className="text-gray-400 text-sm">
@@ -99,13 +98,13 @@ export default function Footer(): React.ReactElement {
             <div className="flex gap-6 mt-4 md:mt-0">
               <Link 
                 href="/privacy"
-                className="text-sm text-gray-400 hover:text-sky-400 transition-colors"
+                className="text-sm text-gray-400 hover:text-red-100 transition-colors"
               >
                 Privacy Policy
               </Link>
               <Link 
                 href="/terms"
-                className="text-sm text-gray-400 hover:text-sky-400 transition-colors"
+                className="text-sm text-gray-400 hover:text-red-100 transition-colors"
               >
                 Terms of Use
               </Link>

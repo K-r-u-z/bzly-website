@@ -10,6 +10,8 @@ interface PageHeroProps {
   height?: 'full' | 'half'
   particlePreset?: 'default' | 'waves' | 'equalizer' | 'pulse' | 'stardust'
   backgroundImage?: string
+  titleClassName?: string
+  subtitleClassName?: string
 }
 
 export default function PageHero({ 
@@ -17,7 +19,9 @@ export default function PageHero({
   subtitle, 
   height = 'half',
   particlePreset = 'default',
-  backgroundImage = '/hero-background.jpg'
+  backgroundImage = '/hero-background.jpg',
+  titleClassName = '',
+  subtitleClassName = ''
 }: PageHeroProps): React.ReactElement {
   return (
     <section className={`relative ${height === 'full' ? 'h-screen' : 'min-h-[50vh]'} flex items-center justify-center overflow-hidden pt-16`}>
@@ -41,11 +45,11 @@ export default function PageHero({
       
       {/* Content */}
       <div className="z-30 text-center px-4 py-20 max-w-4xl mx-auto">
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500 leading-[1.4] pb-4">
+        <h1 className={`text-5xl md:text-7xl font-bold mb-6 animate-fade-in leading-[1.4] pb-4 ${titleClassName}`}>
           {title}
         </h1>
         {subtitle && (
-          <p className="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto">
+          <p className={`text-xl md:text-2xl max-w-2xl mx-auto ${subtitleClassName}`}>
             {subtitle}
           </p>
         )}

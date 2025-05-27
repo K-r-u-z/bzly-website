@@ -2,14 +2,17 @@ import { NextResponse } from 'next/server'
 import connectDB from '@/lib/mongodb'
 import Album from '@/models/Album'
 import mongoose from 'mongoose'
+import { use } from 'react'
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params
+  
   try {
     await connectDB()
-    const album = await Album.findById(params.id)
+    const album = await Album.findById(id)
     
     if (!album) {
       return NextResponse.json(
@@ -29,28 +32,20 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params
+  
   try {
     await connectDB()
     const body = await request.json()
 
-    // Clean up track data before updating
-    const cleanedTracks = body.tracks?.map((track: any) => ({
-      title: track.title,
-      duration: track.duration,
-      trackUrl: track.trackUrl,
-      order: track.order
-    })) || []
-
-    const updateData = {
-      ...body,
-      tracks: cleanedTracks
-    }
-
     const album = await Album.findByIdAndUpdate(
-      params.id,
-      updateData,
+      id,
+      {
+        ...body,
+        releaseDate: new Date(body.releaseDate)
+      },
       { new: true, runValidators: true }
     )
 
@@ -73,20 +68,22 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params
+  
   try {
     await connectDB()
-
+    
     // Validate if the ID is a valid MongoDB ObjectId
-    if (!mongoose.Types.ObjectId.isValid(params.id)) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
         { error: 'Invalid ID format' },
         { status: 400 }
       )
     }
 
-    const album = await Album.findByIdAndDelete(params.id)
+    const album = await Album.findByIdAndDelete(id)
     
     if (!album) {
       return NextResponse.json(

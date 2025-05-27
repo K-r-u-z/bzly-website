@@ -1,4 +1,4 @@
-import { headers } from 'next/headers'
+import { NextResponse } from 'next/server'
 import connectDB from '@/lib/mongodb'
 import Album from '@/models/Album'
 
@@ -11,23 +11,19 @@ export async function GET() {
     const albums = await Album.find().sort({ year: -1 })
     console.log(`Found ${albums.length} albums`)
 
-    return new Response(JSON.stringify(albums), {
-      status: 200,
+    return NextResponse.json(albums, {
       headers: {
-        'Content-Type': 'application/json',
         'Cache-Control': 'no-store, must-revalidate'
       }
     })
   } catch (error) {
     console.error('Error fetching albums:', error)
-    return new Response(
-      JSON.stringify({ error: 'Failed to fetch albums' }),
-      {
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
+    return NextResponse.json(
+      { 
+        error: 'Failed to fetch albums',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
+      { status: 500 }
     )
   }
 }
@@ -58,26 +54,20 @@ export async function POST(request: Request) {
     const album = await Album.create(albumData)
     console.log('Album created successfully:', album)
 
-    return new Response(JSON.stringify(album), {
+    return NextResponse.json(album, {
       status: 201,
       headers: {
-        'Content-Type': 'application/json',
         'Cache-Control': 'no-store, must-revalidate'
       }
     })
   } catch (error) {
     console.error('Error creating album:', error)
-    return new Response(
-      JSON.stringify({ 
+    return NextResponse.json(
+      { 
         error: 'Failed to create album',
         details: error instanceof Error ? error.message : 'Unknown error'
-      }),
-      {
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
+      },
+      { status: 500 }
     )
   }
 } 

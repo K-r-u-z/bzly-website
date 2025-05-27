@@ -41,13 +41,13 @@ export default function EmailResponse() {
       />
       
       <div className="max-w-2xl mx-auto p-6">
-        <form onSubmit={handleSubmit} className="space-y-6 bg-sky-900/20 p-8 rounded-lg">
+        <form onSubmit={handleSubmit} className="space-y-6 bg-red-500/20 p-8 rounded-lg">
           <div>
             <label className="block text-sm font-medium mb-2">Send As:</label>
             <select
               value={emailData.type}
               onChange={(e) => setEmailData(prev => ({ ...prev, type: e.target.value }))}
-              className="w-full px-4 py-2 rounded-lg bg-black/50 border border-sky-600 focus:outline-none focus:border-sky-400 text-white"
+              className="w-full px-4 py-2 rounded-lg bg-black/50 border border-red-100 focus:outline-none focus:border-red-200 text-white"
             >
               <option value="contact">contact@bzly.info</option>
               <option value="noreply">noreply@bzly.info</option>
@@ -60,7 +60,7 @@ export default function EmailResponse() {
               type="email"
               value={emailData.to}
               onChange={(e) => setEmailData(prev => ({ ...prev, to: e.target.value }))}
-              className="w-full px-4 py-2 rounded-lg bg-black/50 border border-sky-600 focus:outline-none focus:border-sky-400 text-white"
+              className="w-full px-4 py-2 rounded-lg bg-black/50 border border-red-100 focus:outline-none focus:border-red-200 text-white"
               required
             />
           </div>
@@ -71,7 +71,7 @@ export default function EmailResponse() {
               type="text"
               value={emailData.subject}
               onChange={(e) => setEmailData(prev => ({ ...prev, subject: e.target.value }))}
-              className="w-full px-4 py-2 rounded-lg bg-black/50 border border-sky-600 focus:outline-none focus:border-sky-400 text-white"
+              className="w-full px-4 py-2 rounded-lg bg-black/50 border border-red-100 focus:outline-none focus:border-red-200 text-white"
               required
             />
           </div>
@@ -81,14 +81,14 @@ export default function EmailResponse() {
             <textarea
               value={emailData.message}
               onChange={(e) => setEmailData(prev => ({ ...prev, message: e.target.value }))}
-              className="w-full px-4 py-2 rounded-lg bg-black/50 border border-sky-600 focus:outline-none focus:border-sky-400 text-white h-40"
+              className="w-full px-4 py-2 rounded-lg bg-black/50 border border-red-100 focus:outline-none focus:border-red-200 text-white h-40"
               required
             />
           </div>
           
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-sky-500/25"
+            className="w-full bg-gradient-to-r from-red-100 to-red-200 hover:from-red-200 hover:to-red-300 text-white px-8 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-red-500/25"
           >
             Send Email
           </button>

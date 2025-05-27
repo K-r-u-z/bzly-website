@@ -29,8 +29,8 @@ export async function GET() {
         order: 1
       }],
       streamingLinks: {
-        spotify: 'https://spotify.com/test',
-        soundcloud: 'https://soundcloud.com/test'
+        soundcloud: 'https://soundcloud.com/bzly',
+        apple: 'https://music.apple.com/artist/bzly'
       }
     })
 

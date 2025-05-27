@@ -6,12 +6,14 @@ import PageHero from '@/components/PageHero'
 import AlbumForm from '@/components/AlbumForm'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import type { Album } from '@/types'
+import { use } from 'react'
 
 export default function EditAlbum({
   params
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }): React.ReactElement {
+  const { id } = use(params)
   const [album, setAlbum] = useState<Album | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
@@ -20,22 +22,26 @@ export default function EditAlbum({
 
   useEffect(() => {
     fetchAlbum()
-  }, [params.id])
+  }, [id])
 
   const fetchAlbum = async () => {
     try {
-      const response = await fetch(`/api/music/${params.id}`)
+      const response = await fetch(`/api/music/${id}`)
       if (!response.ok) throw new Error('Failed to fetch album')
       const data = await response.json()
       setAlbum({
         ...data,
         id: data._id.toString(),
         _id: data._id.toString(),
-        tracks: data.tracks.map((track: any) => ({
-          ...track,
-          id: track._id.toString(),
-          _id: track._id.toString()
-        }))
+        title: data.title || '',
+        description: data.description || '',
+        coverImage: data.coverImage || '',
+        releaseDate: new Date(data.releaseDate).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        }),
+        tracks: data.tracks || []
       })
     } catch (err) {
       setError('Failed to load album')
@@ -50,12 +56,15 @@ export default function EditAlbum({
     setError('')
 
     try {
-      const response = await fetch(`/api/music/${params.id}`, {
+      const response = await fetch(`/api/music/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          ...data,
+          releaseDate: new Date().toISOString()
+        }),
       })
 
       if (!response.ok) throw new Error('Failed to update album')
@@ -73,13 +82,13 @@ export default function EditAlbum({
 
   if (!album) {
     return (
-      <main className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white">
+      <main className="min-h-screen bg-gradient-to-b from-black via-black to-black text-white">
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-red-500">Album not found</h1>
+            <h1 className="text-2xl font-bold text-gray-300">Album not found</h1>
             <button
               onClick={() => router.push('/admin/dashboard')}
-              className="mt-4 text-sky-400 hover:text-sky-300"
+              className="mt-4 text-gray-400 hover:text-white"
             >
               Return to Dashboard
             </button>
@@ -90,21 +99,17 @@ export default function EditAlbum({
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900">
-      <PageHero 
-        title={`Edit Album: ${album.title}`}
-        subtitle="Update album details and tracks"
-      />
-      
-      <section className="py-20 px-4">
-        <div className="max-w-3xl mx-auto">
+    <main className="min-h-screen bg-gradient-to-b from-black via-black to-black text-white">
+      <PageHero title={`Edit Album: ${album.title}`} />
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto">
           {error && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-center">
+            <div className="mb-6 p-4 bg-gray-800/50 border border-gray-700 rounded-lg text-gray-300 text-center">
               {error}
             </div>
           )}
 
-          <div className="bg-black/50 backdrop-blur-md p-8 rounded-lg border border-sky-900/30">
+          <div className="bg-black/90 backdrop-blur-md p-8 rounded-lg border border-gray-800">
             <AlbumForm
               initialData={album}
               onSubmit={handleSubmit}
@@ -112,7 +117,7 @@ export default function EditAlbum({
             />
           </div>
         </div>
-      </section>
+      </div>
     </main>
   )
 } 

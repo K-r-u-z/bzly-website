@@ -6,6 +6,7 @@ import PageHero from '@/components/PageHero'
 import TrackPlayer from '@/components/TrackPlayer'
 import Image from 'next/image'
 import NewsletterForm from '@/components/NewsletterForm'
+import { FaSoundcloud } from 'react-icons/fa'
 
 interface Track {
   id: string
@@ -25,12 +26,8 @@ interface Album {
   tracks: Track[]
   createdAt: Date
   streamingLinks: {
-    spotify?: string
-    appleMusic?: string
-    youtube?: string
+    apple?: string
     soundcloud?: string
-    bandcamp?: string
-    amazonMusic?: string
   }
 }
 
@@ -120,10 +117,12 @@ export default function Music(): React.ReactElement {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white">
+    <main className="min-h-screen bg-gradient-to-b from-black via-red-500/10 to-black text-white">
       <PageHero 
         title="Music"
         subtitle="Listen to BZLY's latest releases and full discography"
+        titleClassName="text-white"
+        subtitleClassName="text-white"
       />
       
       {/* Albums Section */}
@@ -142,7 +141,7 @@ export default function Music(): React.ReactElement {
           )}
 
           {albums.map((album, index) => (
-            <div key={album.id.toString()} className="mb-20 bg-gradient-to-r from-black to-sky-900/20 rounded-lg p-8">
+            <div key={album.id.toString()} className="mb-20 bg-gradient-to-r from-black to-red-500/20 rounded-lg p-8">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* Album Cover */}
                 <div className="relative w-full">
@@ -151,7 +150,7 @@ export default function Music(): React.ReactElement {
                     alt={album.title}
                     width={600}
                     height={600}
-                    className="w-full rounded-lg shadow-2xl shadow-sky-500/10 hover:scale-105 transition-transform duration-500"
+                    className="w-full rounded-lg shadow-2xl shadow-red-500/10 hover:scale-105 transition-transform duration-500"
                     priority={index === 0}
                     quality={90}
                     loading={index === 0 ? "eager" : "lazy"}
@@ -161,38 +160,24 @@ export default function Music(): React.ReactElement {
                 {/* Album Info */}
                 <div className="md:col-span-2">
                   <div className="mb-6">
-                    <h2 className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500">
+                    <h2 className="text-3xl font-bold mb-2 text-white">
                       {album.title}
                     </h2>
                     <p className="text-gray-400">{album.year}</p>
                   </div>
 
                   {/* Streaming Links */}
-                  <div className="flex gap-4 mb-8">
-                    {album.streamingLinks.spotify && (
-                      <Link 
-                        href={album.streamingLinks.spotify}
-                        className="bg-sky-600 hover:bg-sky-700 text-white px-6 py-2 rounded-full transition-colors"
-                      >
-                        Spotify
-                      </Link>
-                    )}
-                    {album.streamingLinks.appleMusic && (
-                      <Link 
-                        href={album.streamingLinks.appleMusic}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full transition-colors"
-                      >
-                        Apple Music
-                      </Link>
-                    )}
+                  <div className="mb-8">
                     {album.streamingLinks.soundcloud && (
-                      <Link 
+                      <a
                         href={album.streamingLinks.soundcloud}
                         target="_blank"
-                        className="bg-sky-500 hover:bg-sky-600 text-white px-6 py-2 rounded-full transition-colors"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-red-400 hover:bg-red-300 text-white rounded-full transition-all duration-300 shadow-lg hover:shadow-red-100/25"
                       >
-                        SoundCloud
-                      </Link>
+                        <FaSoundcloud className="text-xl" />
+                        Listen on SoundCloud
+                      </a>
                     )}
                   </div>
 
@@ -223,7 +208,7 @@ export default function Music(): React.ReactElement {
                     {album.tracks.length > 3 && (
                       <button
                         onClick={() => toggleExpand(album.id)}
-                        className="mt-4 text-sky-400 hover:text-sky-300 transition-colors flex items-center gap-2"
+                        className="mt-4 text-red-100 hover:text-red-200 transition-colors flex items-center gap-2"
                       >
                         {expandedAlbums.has(album.id) ? (
                           <>
@@ -251,9 +236,9 @@ export default function Music(): React.ReactElement {
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-20 px-4 bg-sky-900/10">
+      <section className="py-20 px-4 bg-red-500/5">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-sky-400">
+          <h2 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-red-200 to-red-100">
             Stay Updated
           </h2>
           <p className="text-gray-300 mb-8">

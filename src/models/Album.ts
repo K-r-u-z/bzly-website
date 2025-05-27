@@ -33,8 +33,6 @@ const albumSchema = new mongoose.Schema({
     required: true
   },
   streamingLinks: {
-    spotify: String,
-    apple: String,
     soundcloud: String
   },
   tracks: [trackSchema]

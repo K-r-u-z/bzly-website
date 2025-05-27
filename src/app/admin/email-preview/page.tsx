@@ -33,7 +33,7 @@ export default function EmailPreviewPage() {
           <div className="flex justify-between items-center mb-8">
             <Link 
               href="/admin/dashboard"
-              className="text-sky-400 hover:text-sky-300"
+              className="text-white hover:text-red-300"
             >
               ← Back to Dashboard
             </Link>
@@ -41,7 +41,7 @@ export default function EmailPreviewPage() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Controls */}
-            <div className="space-y-6 bg-black/50 p-6 rounded-lg border border-sky-900/20">
+            <div className="space-y-6 bg-black/50 p-6 rounded-lg border border-red-500/20">
               {/* Email Type Toggle */}
               <div>
                 <label className="block text-white mb-2">Email Type</label>
@@ -50,7 +50,7 @@ export default function EmailPreviewPage() {
                     onClick={() => setEmailType('news')}
                     className={`p-2 rounded-lg transition-all duration-300 ${
                       emailType === 'news'
-                        ? 'bg-sky-500 text-white'
+                        ? 'bg-red-400 text-white'
                         : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
                     }`}
                   >
@@ -60,7 +60,7 @@ export default function EmailPreviewPage() {
                     onClick={() => setEmailType('welcome')}
                     className={`p-2 rounded-lg transition-all duration-300 ${
                       emailType === 'welcome'
-                        ? 'bg-sky-500 text-white'
+                        ? 'bg-red-400 text-white'
                         : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
                     }`}
                   >
@@ -78,7 +78,7 @@ export default function EmailPreviewPage() {
                       type="text"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      className="w-full p-2 rounded bg-gray-800 text-white border border-gray-700 focus:border-sky-500 focus:outline-none"
+                      className="w-full p-2 rounded bg-gray-800 text-white border border-gray-700 focus:border-red-100 focus:outline-none"
                     />
                   </div>
 
@@ -87,11 +87,11 @@ export default function EmailPreviewPage() {
                     <select
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
-                      className="w-full p-2 rounded bg-gray-800 text-white border border-gray-700 focus:border-sky-500 focus:outline-none"
+                      className="w-full p-2 rounded bg-gray-800 text-white border border-gray-700 focus:border-red-100 focus:outline-none"
                     >
-                      <option value="UPDATE">Update</option>
                       <option value="RELEASE">Release</option>
-                      <option value="TOUR">Tour</option>
+                      <option value="UPDATE">Update</option>
+                      <option value="ANNOUNCEMENT">Announcement</option>
                       <option value="LAUNCH">Launch</option>
                     </select>
                   </div>
@@ -100,14 +100,14 @@ export default function EmailPreviewPage() {
 
               <button
                 onClick={handlePreview}
-                className="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white py-2 px-4 rounded-full transition-all duration-300"
+                className="w-full bg-red-400 hover:bg-red-300 text-white py-2 px-4 rounded-full transition-all duration-300"
               >
                 Generate Preview
               </button>
             </div>
 
             {/* Preview */}
-            <div className="bg-black/50 p-6 rounded-lg border border-sky-900/20">
+            <div className="bg-black/50 p-6 rounded-lg border border-red-500/20">
               <h2 className="text-xl font-bold text-white mb-4">Preview</h2>
               <div className="bg-white rounded-lg overflow-hidden">
                 <iframe

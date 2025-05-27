@@ -1,15 +1,23 @@
 'use client'
 
-import React, { useState, useRef } from 'react'
-import dynamic from 'next/dynamic'
+import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import type { NewsItem } from '@/types'
-import './quill-custom.css'
-
-const ReactQuill = dynamic(() => import('react-quill'), {
-  ssr: false,
-  loading: () => <p>Loading editor...</p>
-})
-import 'react-quill/dist/quill.snow.css'
+import { useEditor, EditorContent } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import Link from '@tiptap/extension-link'
+import Image from '@tiptap/extension-image'
+import TextAlign from '@tiptap/extension-text-align'
+import Underline from '@tiptap/extension-underline'
+import Subscript from '@tiptap/extension-subscript'
+import Superscript from '@tiptap/extension-superscript'
+import Highlight from '@tiptap/extension-highlight'
+import TextStyle from '@tiptap/extension-text-style'
+import Color from '@tiptap/extension-color'
+import FontSize from '@tiptap/extension-font-size'
+import FontFamily from '@tiptap/extension-font-family'
+import ImageUpload from './ImageUpload'
+import '@/styles/editor.css'
 
 interface NewsFormProps {
   initialData?: NewsItem
@@ -17,232 +25,364 @@ interface NewsFormProps {
   isLoading: boolean
 }
 
+const MenuBar = ({ editor }: { editor: any }) => {
+  if (!editor) {
+    return null
+  }
+
+  const handleButtonClick = (e: React.MouseEvent, action: () => void) => {
+    e.preventDefault()
+    e.stopPropagation()
+    action()
+  }
+
+  return (
+    <div className="flex flex-wrap gap-2 p-2 bg-gray-800 rounded-t-lg border-b border-gray-700">
+      {/* Text Style */}
+      <div className="flex items-center gap-1 border-r border-gray-700 pr-2">
+        <select
+          onChange={(e) => editor.chain().focus().setFontFamily(e.target.value).run()}
+          className="bg-gray-700 text-white rounded px-2 py-1 text-sm"
+        >
+          <option value="Arial">Arial</option>
+          <option value="Times New Roman">Times New Roman</option>
+          <option value="Courier New">Courier New</option>
+          <option value="Georgia">Georgia</option>
+          <option value="Verdana">Verdana</option>
+        </select>
+        <select
+          onChange={(e) => {
+            const size = e.target.value
+            editor.chain().focus().setFontSize(`${size}px`).run()
+          }}
+          className="bg-gray-700 text-white rounded px-2 py-1 text-sm"
+        >
+          <option value="8">8px</option>
+          <option value="10">10px</option>
+          <option value="12">12px</option>
+          <option value="14">14px</option>
+          <option value="16">16px</option>
+          <option value="18">18px</option>
+          <option value="20">20px</option>
+          <option value="24">24px</option>
+          <option value="32">32px</option>
+        </select>
+      </div>
+
+      {/* Text Formatting */}
+      <div className="flex items-center gap-1 border-r border-gray-700 pr-2">
+        <button
+          type="button"
+          onClick={(e) => handleButtonClick(e, () => editor.chain().focus().toggleBold().run())}
+          className={`p-2 rounded hover:bg-gray-700 ${editor.isActive('bold') ? 'bg-gray-700' : ''}`}
+          title="Bold"
+        >
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 12h4a2 2 0 002-2V8a2 2 0 00-2-2H6v8zm0 0h8a2 2 0 002-2v-2a2 2 0 00-2-2H6v8z" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          onClick={(e) => handleButtonClick(e, () => editor.chain().focus().toggleItalic().run())}
+          className={`p-2 rounded hover:bg-gray-700 ${editor.isActive('italic') ? 'bg-gray-700' : ''}`}
+          title="Italic"
+        >
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l-4 4-4-4" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          onClick={(e) => handleButtonClick(e, () => editor.chain().focus().toggleUnderline().run())}
+          className={`p-2 rounded hover:bg-gray-700 ${editor.isActive('underline') ? 'bg-gray-700' : ''}`}
+          title="Underline"
+        >
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          onClick={(e) => handleButtonClick(e, () => editor.chain().focus().toggleStrike().run())}
+          className={`p-2 rounded hover:bg-gray-700 ${editor.isActive('strike') ? 'bg-gray-700' : ''}`}
+          title="Strike"
+        >
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 12h12M6 12h12" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Text Alignment */}
+      <div className="flex items-center gap-1 border-r border-gray-700 pr-2">
+        <button
+          type="button"
+          onClick={(e) => handleButtonClick(e, () => editor.chain().focus().setTextAlign('left').run())}
+          className={`p-2 rounded hover:bg-gray-700 ${editor.isActive({ textAlign: 'left' }) ? 'bg-gray-700' : ''}`}
+          title="Align Left"
+        >
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h10M4 18h12" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          onClick={(e) => handleButtonClick(e, () => editor.chain().focus().setTextAlign('center').run())}
+          className={`p-2 rounded hover:bg-gray-700 ${editor.isActive({ textAlign: 'center' }) ? 'bg-gray-700' : ''}`}
+          title="Align Center"
+        >
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M6 12h12M8 18h8" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          onClick={(e) => handleButtonClick(e, () => editor.chain().focus().setTextAlign('right').run())}
+          className={`p-2 rounded hover:bg-gray-700 ${editor.isActive({ textAlign: 'right' }) ? 'bg-gray-700' : ''}`}
+          title="Align Right"
+        >
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M10 12h10M12 18h8" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Lists */}
+      <div className="flex items-center gap-1 border-r border-gray-700 pr-2">
+        <button
+          type="button"
+          onClick={(e) => handleButtonClick(e, () => editor.chain().focus().toggleBulletList().run())}
+          className={`p-2 rounded hover:bg-gray-700 ${editor.isActive('bulletList') ? 'bg-gray-700' : ''}`}
+          title="Bullet List"
+        >
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          onClick={(e) => handleButtonClick(e, () => editor.chain().focus().toggleOrderedList().run())}
+          className={`p-2 rounded hover:bg-gray-700 ${editor.isActive('orderedList') ? 'bg-gray-700' : ''}`}
+          title="Numbered List"
+        >
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 20h14M7 12h14M7 4h14M3 20h.01M3 12h.01M3 4h.01" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Links and Images */}
+      <div className="flex items-center gap-1">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            const url = window.prompt('Enter the URL')
+            if (url) {
+              editor.chain().focus().setLink({ href: url }).run()
+            }
+          }}
+          className={`p-2 rounded hover:bg-gray-700 ${editor.isActive('link') ? 'bg-gray-700' : ''}`}
+          title="Insert Link"
+        >
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            const url = window.prompt('Enter the image URL')
+            if (url) {
+              editor.chain().focus().setImage({ src: url }).run()
+            }
+          }}
+          className="p-2 rounded hover:bg-gray-700"
+          title="Insert Image"
+        >
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export default function NewsForm({ initialData, onSubmit, isLoading }: NewsFormProps): React.ReactElement {
   const [title, setTitle] = useState(initialData?.title || '')
-  const [content, setContent] = useState(initialData?.content || '')
   const [excerpt, setExcerpt] = useState(initialData?.excerpt || '')
   const [image, setImage] = useState(initialData?.image || '')
   const [category, setCategory] = useState<NewsItem['category']>(initialData?.category || 'Update')
-  const [uploadMethod, setUploadMethod] = useState<'file' | 'url'>('file')
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const [imagePreview, setImagePreview] = useState(initialData?.image || '')
+  const [date, setDate] = useState(initialData?.inputDate || new Date().toISOString().split('T')[0])
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState('')
+  const router = useRouter()
 
-  const handleImageUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const url = e.target.value
-    setImage(url)
-    setImagePreview(url)
-  }
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        const base64String = reader.result as string
-        setImage(base64String)
-        setImagePreview(base64String)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Link.configure({
+        openOnClick: false,
+      }),
+      Image,
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+      }),
+      Underline,
+      Subscript,
+      Superscript,
+      Highlight,
+      TextStyle,
+      Color,
+      FontSize.configure({
+        types: ['textStyle']
+      }),
+      FontFamily.configure({
+        types: ['textStyle'],
+      }),
+    ],
+    content: initialData?.content || '',
+    editorProps: {
+      attributes: {
+        class: 'prose prose-invert max-w-none focus:outline-none min-h-[200px] p-4 bg-gray-800 rounded-b-lg',
+      },
+    },
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    await onSubmit({
-      title,
-      content,
-      excerpt,
-      image,
-      category,
-      date: new Date().toISOString()
-    })
-  }
+    setIsSubmitting(true)
+    setError('')
 
-  const modules = {
-    toolbar: [
-      [{ 'header': [1, 2, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'color': [] }, { 'background': [] }],
-      [{ 'align': [] }],
-      ['link', 'image'],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      ['clean']
-    ],
-  }
+    try {
+      // Create date at noon UTC to prevent timezone issues
+      const [year, month, day] = date.split('-').map(Number)
+      const utcDate = new Date(Date.UTC(year, month - 1, day, 12, 0, 0))
 
-  const formats = [
-    'header',
-    'bold', 'italic', 'underline', 'strike',
-    'color', 'background',
-    'align',
-    'list', 'bullet',
-    'link', 'image'
-  ]
+      await onSubmit({
+        title,
+        content: editor?.getHTML() || '',
+        excerpt,
+        image,
+        category,
+        date: utcDate.toISOString()
+      })
+      router.push('/admin/dashboard')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to save article')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
-      <div className="space-y-6">
-        <div>
-          <label htmlFor="title" className="block text-sm font-medium text-white mb-2">
-            Title
-          </label>
-          <ReactQuill
-            theme="snow"
-            value={title}
-            onChange={setTitle}
-            modules={{
-              toolbar: [
-                ['bold', 'italic'],
-                [{ 'color': [] }],
-                [{ 'align': [] }],
-              ]
-            }}
-            formats={['bold', 'italic', 'color', 'align']}
-            className="bg-gray-900 text-white rounded-md quill-white"
-          />
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {error && (
+        <div className="p-4 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500">
+          {error}
         </div>
+      )}
 
-        <div>
-          <label htmlFor="excerpt" className="block text-sm font-medium text-white mb-2">
-            Excerpt
-          </label>
-          <textarea
-            id="excerpt"
-            value={excerpt}
-            onChange={(e) => setExcerpt(e.target.value)}
-            rows={3}
-            className="mt-1 block w-full rounded-md border border-gray-700 bg-gray-900 text-white px-4 py-2 shadow-sm focus:border-sky-500 focus:ring-sky-500 placeholder:text-white/70 text-base"
-            placeholder="Brief summary of the article"
-            required
-          />
+      <div className="space-y-2">
+        <label htmlFor="title" className="block text-sm font-medium text-gray-200">
+          Title
+        </label>
+        <input
+          type="text"
+          id="title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+          required
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="excerpt" className="block text-sm font-medium text-gray-200">
+          Excerpt
+        </label>
+        <textarea
+          id="excerpt"
+          value={excerpt}
+          onChange={(e) => setExcerpt(e.target.value)}
+          rows={3}
+          className="mt-1 block w-full rounded-md border border-gray-700 bg-gray-900 text-white px-4 py-2 shadow-sm focus:border-red-100 focus:ring-red-100 placeholder:text-white/70 text-base"
+          placeholder="Brief summary of the article"
+          required
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="content" className="block text-sm font-medium text-gray-200">
+          Content
+        </label>
+        <div className="border border-gray-700 rounded-lg overflow-hidden">
+          <MenuBar editor={editor} />
+          <EditorContent editor={editor} />
         </div>
+      </div>
 
-        <div>
-          <label htmlFor="category" className="block text-sm font-medium text-white mb-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label htmlFor="category" className="block text-sm font-medium text-gray-200">
             Category
           </label>
           <select
             id="category"
             value={category}
             onChange={(e) => setCategory(e.target.value as NewsItem['category'])}
-            className="mt-1 block w-full rounded-md border border-gray-700 bg-gray-900 text-white px-4 py-2 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-base"
+            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
           >
-            <option value="Update">Update</option>
             <option value="Release">Release</option>
-            <option value="Tour">Tour</option>
+            <option value="Update">Update</option>
             <option value="Announcement">Announcement</option>
             <option value="Launch">Launch</option>
           </select>
         </div>
 
-        <div>
-          <label htmlFor="content" className="block text-sm font-medium text-white mb-2">
-            Content
+        <div className="space-y-2">
+          <label htmlFor="date" className="block text-sm font-medium text-gray-200">
+            Date
           </label>
-          <ReactQuill
-            theme="snow"
-            value={content}
-            onChange={setContent}
-            modules={modules}
-            formats={formats}
-            className="bg-gray-900 text-white rounded-md quill-white"
+          <input
+            type="date"
+            id="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
-        </div>
-
-        <div className="space-y-4">
-          <label className="block text-sm font-medium text-white">Featured Image</label>
-          
-          {/* Toggle Button */}
-          <div className="flex justify-center mb-4">
-            <button
-              type="button"
-              onClick={() => setUploadMethod(uploadMethod === 'file' ? 'url' : 'file')}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-sky-400 rounded-full hover:bg-sky-900/40 transition-colors border border-gray-700"
-            >
-              {uploadMethod === 'file' ? (
-                <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                  </svg>
-                  Switch to URL Input
-                </>
-              ) : (
-                <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                  </svg>
-                  Switch to File Upload
-                </>
-              )}
-            </button>
-          </div>
-
-          {/* File Upload */}
-          {uploadMethod === 'file' && (
-            <div className="animate-fadeIn">
-              <input
-                type="file"
-                id="imageFile"
-                ref={fileInputRef}
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full px-4 py-2 bg-gray-900 text-sky-400 rounded-lg hover:bg-sky-900/40 transition-colors border border-gray-700 flex items-center justify-center gap-2"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                Choose Image File
-              </button>
-            </div>
-          )}
-
-          {/* URL Input */}
-          {uploadMethod === 'url' && (
-            <div className="animate-fadeIn">
-              <label htmlFor="imageUrl" className="block text-sm text-white mb-2">
-                Enter Image URL
-              </label>
-              <input
-                type="text"
-                id="imageUrl"
-                value={image}
-                onChange={handleImageUrlChange}
-                className="w-full px-4 py-2 rounded-lg bg-black/50 border border-sky-600 focus:outline-none focus:border-sky-400 text-white placeholder:text-white/70 text-base"
-                placeholder="Image URL"
-              />
-            </div>
-          )}
-
-          {/* Image Preview */}
-          {imagePreview && (
-            <div className="mt-4 animate-fadeIn">
-              <label className="block text-sm font-medium text-white mb-2">
-                Preview
-              </label>
-              <div className="relative w-full max-w-2xl aspect-video">
-                <img 
-                  src={imagePreview} 
-                  alt="Preview" 
-                  className="w-full h-full object-cover rounded-lg border border-gray-700"
-                />
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
-      <div className="flex justify-end pt-6 border-t border-gray-700">
+      <div className="space-y-2">
+        <label className="block text-sm font-medium text-gray-200">
+          Featured Image
+        </label>
+        <ImageUpload
+          onImageUpload={setImage}
+          initialImage={image}
+          aspectRatio={16 / 9}
+        />
+      </div>
+
+      <div className="flex justify-end space-x-4 pt-6">
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="px-6 py-2 border border-red-100 text-red-100 rounded-full hover:bg-red-100 hover:text-white transition-all duration-300"
+        >
+          Cancel
+        </button>
         <button
           type="submit"
-          disabled={isLoading}
-          className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white px-8 py-3 rounded-full transition-all duration-300 disabled:opacity-50"
+          disabled={isLoading || isSubmitting}
+          className="bg-gradient-to-r from-red-100 to-red-200 hover:from-red-200 hover:to-red-300 text-white px-6 py-2 rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isLoading ? 'Saving...' : 'Save Article'}
+          {isLoading || isSubmitting ? 'Saving...' : 'Save Article'}
         </button>
       </div>
     </form>

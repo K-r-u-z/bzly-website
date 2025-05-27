@@ -57,15 +57,15 @@ function SortableTrackItem({ track, index, onRemove, onEdit }: {
       style={style}
       className={`flex items-center gap-4 p-4 rounded-lg ${
         isDragging 
-          ? 'bg-sky-900/40 ring-2 ring-sky-500/50 shadow-lg scale-105' 
-          : 'bg-sky-900/20'
+          ? 'bg-red-500/40 ring-2 ring-red-100/50 shadow-lg scale-105' 
+          : 'bg-red-500/20'
       } transition-all duration-200`}
     >
       {/* Drag Handle - Make it more touch-friendly */}
       <div
         {...attributes}
         {...listeners}
-        className="cursor-move text-gray-400 hover:text-sky-400 p-3 -m-1 rounded-lg hover:bg-sky-900/30 active:bg-sky-900/50 touch-none"
+        className="cursor-move text-gray-400 hover:text-red-100 p-3 -m-1 rounded-lg hover:bg-red-500/30 active:bg-red-500/50 touch-none"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8h16M4 16h16" />
@@ -84,21 +84,21 @@ function SortableTrackItem({ track, index, onRemove, onEdit }: {
             type="text"
             value={editedTrack.title}
             onChange={(e) => setEditedTrack({ ...editedTrack, title: e.target.value })}
-            className="px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-sky-400 text-white"
+            className="px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-red-100 text-white"
             placeholder="Track Title"
           />
           <input
             type="text"
             value={editedTrack.duration}
             onChange={(e) => setEditedTrack({ ...editedTrack, duration: e.target.value })}
-            className="px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-sky-400 text-white"
+            className="px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-red-100 text-white"
             placeholder="Duration"
           />
           <input
             type="text"
             value={editedTrack.trackUrl}
             onChange={(e) => setEditedTrack({ ...editedTrack, trackUrl: e.target.value })}
-            className="px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-sky-400 text-white"
+            className="px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-red-100 text-white"
             placeholder="Track URL"
           />
         </div>
@@ -125,7 +125,7 @@ function SortableTrackItem({ track, index, onRemove, onEdit }: {
           <button
             type="button"
             onClick={() => setIsEditing(true)}
-            className="text-sky-400 hover:text-sky-300 p-1"
+            className="text-red-100 hover:text-red-200 p-1"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -152,14 +152,14 @@ interface AlbumFormProps {
   isLoading: boolean
 }
 
+type UploadMethod = 'file' | 'url'
+
 export default function AlbumForm({ initialData, onSubmit, isLoading }: AlbumFormProps) {
   const [formData, setFormData] = useState<Partial<Album>>({
     title: '',
     year: new Date().getFullYear().toString(),
     coverArt: '',
     streamingLinks: {
-      spotify: '',
-      apple: '',
       soundcloud: ''
     },
     tracks: [],
@@ -168,7 +168,8 @@ export default function AlbumForm({ initialData, onSubmit, isLoading }: AlbumFor
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [imagePreview, setImagePreview] = useState(initialData?.coverArt || '')
-  const [uploadMethod, setUploadMethod] = useState<'file' | 'url'>('file')
+  const [uploadMethod, setUploadMethod] = useState<UploadMethod>('file')
+  const [isUploading, setIsUploading] = useState(false)
 
   const [newTrack, setNewTrack] = useState<Partial<Track>>({
     title: '',
@@ -224,16 +225,35 @@ export default function AlbumForm({ initialData, onSubmit, isLoading }: AlbumFor
     setImagePreview(url)
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        const base64String = reader.result as string
-        setFormData(prev => ({ ...prev, coverArt: base64String }))
-        setImagePreview(base64String)
+    if (!file) return
+
+    try {
+      setIsUploading(true)
+
+      // Create form data
+      const formData = new FormData()
+      formData.append('file', file)
+
+      // Upload to Vercel Blob
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to upload image')
       }
-      reader.readAsDataURL(file)
+
+      const { url } = await response.json()
+      setFormData(prev => ({ ...prev, coverArt: url }))
+      setImagePreview(url)
+    } catch (error) {
+      console.error('Upload error:', error)
+      alert('Failed to upload image. Please try again.')
+    } finally {
+      setIsUploading(false)
     }
   }
 
@@ -345,7 +365,7 @@ export default function AlbumForm({ initialData, onSubmit, isLoading }: AlbumFor
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Album Details */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-sky-400">Album Details</h3>
+        <h3 className="text-lg font-semibold text-red-100">Album Details</h3>
         
         <div>
           <label htmlFor="title" className="block text-sm font-medium text-gray-300 mb-2">
@@ -358,7 +378,7 @@ export default function AlbumForm({ initialData, onSubmit, isLoading }: AlbumFor
             value={formData.title}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-sky-400 text-white"
+            className="w-full px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-red-100 text-white"
           />
         </div>
 
@@ -373,148 +393,107 @@ export default function AlbumForm({ initialData, onSubmit, isLoading }: AlbumFor
             value={formData.year}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-sky-400 text-white"
+            className="w-full px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-red-100 text-white"
           />
         </div>
 
-        <div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-300">Cover Art</label>
-          
-          {/* Toggle Button */}
-          <div className="flex justify-center mb-4">
-            <button
-              type="button"
-              onClick={() => setUploadMethod(uploadMethod === 'file' ? 'url' : 'file')}
-              className="flex items-center gap-2 px-4 py-2 bg-sky-900/20 text-sky-400 rounded-full hover:bg-sky-900/40 transition-colors"
-            >
-              {uploadMethod === 'file' ? (
-                <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                  </svg>
-                  Switch to URL Input
-                </>
-              ) : (
-                <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                  </svg>
-                  Switch to File Upload
-                </>
-              )}
-            </button>
-          </div>
-
-          {/* File Upload */}
-          {uploadMethod === 'file' && (
-            <div className="animate-fadeIn">
-              <input
-                type="file"
-                id="coverArtFile"
-                ref={fileInputRef}
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
-              />
+        {/* Cover Art */}
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-2">
+            Cover Art
+          </label>
+          <div className="space-y-4">
+            <div className="flex gap-4">
               <button
                 type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full px-4 py-2 bg-sky-900/20 text-sky-400 rounded-lg hover:bg-sky-900/40 transition-colors flex items-center justify-center gap-2"
+                onClick={() => setUploadMethod('file')}
+                className={`px-4 py-2 rounded-lg ${
+                  uploadMethod === 'file'
+                    ? 'bg-red-500 text-white'
+                    : 'bg-gray-800 text-gray-300'
+                }`}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                Choose Image File
+                Upload File
+              </button>
+              <button
+                type="button"
+                onClick={() => setUploadMethod('url')}
+                className={`px-4 py-2 rounded-lg ${
+                  uploadMethod === 'url'
+                    ? 'bg-red-500 text-white'
+                    : 'bg-gray-800 text-gray-300'
+                }`}
+              >
+                Use URL
               </button>
             </div>
-          )}
 
-          {/* URL Input */}
-          {uploadMethod === 'url' && (
-            <div className="animate-fadeIn">
-              <label htmlFor="coverArtUrl" className="block text-sm text-gray-400 mb-2">
-                Enter Image URL
-              </label>
+            {uploadMethod === 'file' ? (
+              <div>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploading}
+                  className="w-full px-4 py-2 rounded-lg bg-gray-800 text-gray-300 hover:bg-gray-700 disabled:opacity-50"
+                >
+                  {isUploading ? 'Uploading...' : 'Choose Image'}
+                </button>
+              </div>
+            ) : (
               <input
-                type="text"
-                id="coverArtUrl"
-                name="coverArt"
+                type="url"
                 value={formData.coverArt}
                 onChange={handleImageUrlChange}
-                className="w-full px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-sky-400 text-white"
                 placeholder="Enter image URL"
+                className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:border-red-100 text-white"
               />
-            </div>
-          )}
+            )}
 
-          {/* Image Preview */}
-          {imagePreview && (
-            <div className="mt-4 animate-fadeIn">
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Preview
-              </label>
-              <div className="relative w-full max-w-2xl aspect-square">
-                <img 
-                  src={imagePreview} 
-                  alt="Cover Art Preview" 
-                  className="w-full h-full object-cover rounded-lg border border-gray-700"
+            {imagePreview && (
+              <div className="mt-4">
+                <img
+                  src={imagePreview}
+                  alt="Cover art preview"
+                  className="w-32 h-32 object-cover rounded-lg"
                 />
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
       {/* Streaming Links */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-sky-400">Streaming Links</h3>
+        <h3 className="text-lg font-semibold text-red-100">Streaming Links</h3>
         
-        <div>
-          <label htmlFor="streaming.spotify" className="block text-sm font-medium text-gray-300 mb-2">
-            Spotify URL
-          </label>
-          <input
-            type="text"
-            id="streaming.spotify"
-            name="streaming.spotify"
-            value={formData.streamingLinks?.spotify}
-            onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-sky-400 text-white"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="streaming.apple" className="block text-sm font-medium text-gray-300 mb-2">
-            Apple Music URL
-          </label>
-          <input
-            type="text"
-            id="streaming.apple"
-            name="streaming.apple"
-            value={formData.streamingLinks?.apple}
-            onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-sky-400 text-white"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="streaming.soundcloud" className="block text-sm font-medium text-gray-300 mb-2">
-            SoundCloud URL
-          </label>
-          <input
-            type="text"
-            id="streaming.soundcloud"
-            name="streaming.soundcloud"
-            value={formData.streamingLinks?.soundcloud}
-            onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-sky-400 text-white"
-          />
+        <div className="space-y-4">
+          <div>
+            <label htmlFor="streaming.soundcloud" className="block text-sm font-medium text-gray-300 mb-2">
+              SoundCloud URL
+            </label>
+            <input
+              type="url"
+              id="streaming.soundcloud"
+              name="streaming.soundcloud"
+              value={formData.streamingLinks?.soundcloud}
+              onChange={handleChange}
+              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="https://soundcloud.com/..."
+            />
+          </div>
         </div>
       </div>
 
       {/* Tracks */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-sky-400">Tracks</h3>
+        <h3 className="text-lg font-semibold text-red-100">Tracks</h3>
         
         <DndContext
           sensors={sensors}
@@ -547,7 +526,7 @@ export default function AlbumForm({ initialData, onSubmit, isLoading }: AlbumFor
             value={newTrack.title}
             onChange={handleTrackChange}
             placeholder="Title"
-            className="px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-sky-400 text-white text-base placeholder:text-gray-500 sm:placeholder:text-sm"
+            className="px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-red-100 text-white text-base placeholder:text-gray-500 sm:placeholder:text-sm"
           />
           <input
             type="text"
@@ -555,7 +534,7 @@ export default function AlbumForm({ initialData, onSubmit, isLoading }: AlbumFor
             value={newTrack.duration}
             onChange={handleTrackChange}
             placeholder="Time (3:45)"
-            className="px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-sky-400 text-white text-base placeholder:text-gray-500 sm:placeholder:text-sm"
+            className="px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-red-100 text-white text-base placeholder:text-gray-500 sm:placeholder:text-sm"
           />
           <input
             type="text"
@@ -563,13 +542,13 @@ export default function AlbumForm({ initialData, onSubmit, isLoading }: AlbumFor
             value={newTrack.trackUrl}
             onChange={handleTrackChange}
             placeholder="SoundCloud URL"
-            className="px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-sky-400 text-white text-base placeholder:text-gray-500 sm:placeholder:text-sm"
+            className="px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-red-100 text-white text-base placeholder:text-gray-500 sm:placeholder:text-sm"
           />
         </div>
         <button
           type="button"
           onClick={updateTrack}
-          className="w-full px-4 py-2 bg-sky-900/20 text-sky-400 rounded-lg hover:bg-sky-900/40 transition-colors"
+          className="w-full px-4 py-2 bg-red-500/20 text-red-100 rounded-lg hover:bg-red-500/40 transition-colors"
         >
           {editingTrackIndex !== null ? 'Update Track' : 'Add Track'}
         </button>
@@ -580,14 +559,14 @@ export default function AlbumForm({ initialData, onSubmit, isLoading }: AlbumFor
         <button
           type="button"
           onClick={() => window.history.back()}
-          className="px-6 py-2 border border-sky-600 text-sky-400 rounded-full hover:bg-sky-600 hover:text-white transition-all duration-300"
+          className="px-6 py-2 border border-red-100 text-red-100 rounded-full hover:bg-red-100 hover:text-white transition-all duration-300"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isLoading}
-          className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white px-6 py-2 rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-red-100 hover:bg-red-200 text-white px-6 py-2 rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? 'Saving...' : 'Save Album'}
         </button>

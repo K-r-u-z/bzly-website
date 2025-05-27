@@ -1,7 +1,7 @@
 /* Custom styles for Quill editor */
 .quill-white .ql-toolbar {
-  border-color: rgb(55, 65, 81) !important; /* gray-700 */
-  background-color: rgb(17, 24, 39) !important; /* gray-900 */
+  border-color: #560000 !important; /* red-400 */
+  background-color: #250100 !important; /* red-500 */
   border-top-left-radius: 0.5rem !important;    /* 8px */
   border-top-right-radius: 0.5rem !important;   /* 8px */
   border-bottom: none !important;
@@ -14,12 +14,12 @@
 
 .quill-white .ql-toolbar button:hover,
 .quill-white .ql-toolbar .ql-picker-label:hover {
-  color: rgb(14, 165, 233) !important; /* sky-500 */
+  color: #BF0B02 !important; /* red-100 */
 }
 
 .quill-white .ql-toolbar button.ql-active,
 .quill-white .ql-toolbar .ql-picker-label.ql-active {
-  color: rgb(14, 165, 233) !important; /* sky-500 */
+  color: #BF0B02 !important; /* red-100 */
 }
 
 .quill-white .ql-toolbar .ql-picker-item {
@@ -27,8 +27,8 @@
 }
 
 .quill-white .ql-toolbar .ql-picker-options {
-  background-color: rgb(17, 24, 39); /* gray-900 */
-  border-color: rgb(55, 65, 81); /* gray-700 */
+  background-color: #250100; /* red-500 */
+  border-color: #560000; /* red-400 */
 }
 
 .quill-white .ql-toolbar .ql-stroke {
@@ -45,18 +45,18 @@
 
 .quill-white .ql-toolbar button:hover .ql-stroke,
 .quill-white .ql-toolbar button.ql-active .ql-stroke {
-  stroke: rgb(14, 165, 233) !important; /* sky-500 */
+  stroke: #BF0B02 !important; /* red-100 */
 }
 
 .quill-white .ql-toolbar button:hover .ql-fill,
 .quill-white .ql-toolbar button.ql-active .ql-fill {
-  fill: rgb(14, 165, 233) !important; /* sky-500 */
+  fill: #BF0B02 !important; /* red-100 */
 }
 
 /* Container styles */
 .quill-white .ql-container {
-  border-color: rgb(55, 65, 81) !important; /* gray-700 */
-  background-color: rgb(17, 24, 39) !important; /* gray-900 */
+  border-color: #560000 !important; /* red-400 */
+  background-color: #250100 !important; /* red-500 */
   border-bottom-left-radius: 0.5rem !important;    /* 8px */
   border-bottom-right-radius: 0.5rem !important;   /* 8px */
 }
@@ -64,5 +64,5 @@
 /* Focus states */
 .quill-white .ql-container:focus-within,
 .quill-white:focus-within .ql-toolbar {
-  border-color: rgb(14, 165, 233) !important; /* sky-500 */
+  border-color: #BF0B02 !important; /* red-100 */
 } 

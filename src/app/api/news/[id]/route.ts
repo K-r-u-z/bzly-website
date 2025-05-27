@@ -2,14 +2,17 @@ import { NextResponse } from 'next/server'
 import connectDB from '@/lib/mongodb'
 import News from '@/models/News'
 import mongoose from 'mongoose'
+import { use } from 'react'
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params
+  
   try {
     await connectDB()
-    const newsItem = await News.findById(params.id)
+    const newsItem = await News.findById(id)
     
     if (!newsItem) {
       return NextResponse.json(
@@ -29,14 +32,16 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params
+  
   try {
     await connectDB()
     const body = await request.json()
 
     const newsItem = await News.findByIdAndUpdate(
-      params.id,
+      id,
       {
         ...body,
         date: new Date(body.date)
@@ -63,20 +68,22 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params
+  
   try {
     await connectDB()
     
     // Validate if the ID is a valid MongoDB ObjectId
-    if (!mongoose.Types.ObjectId.isValid(params.id)) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
         { error: 'Invalid ID format' },
         { status: 400 }
       )
     }
 
-    const newsItem = await News.findByIdAndDelete(params.id)
+    const newsItem = await News.findByIdAndDelete(id)
     
     if (!newsItem) {
       return NextResponse.json(

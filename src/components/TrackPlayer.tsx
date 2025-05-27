@@ -158,7 +158,7 @@ export default function TrackPlayer({
     <div 
       className={`space-y-2 py-2 px-4 rounded-lg transition-all duration-300 ${
         isPlaying 
-          ? 'bg-sky-900/20 shadow-lg shadow-sky-500/10' 
+          ? 'bg-red-500/20 shadow-lg shadow-red-500/10' 
           : 'hover:bg-white/5'
       }`}
     >
@@ -169,8 +169,8 @@ export default function TrackPlayer({
             onClick={togglePlay}
             className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
               isPlaying 
-                ? 'bg-sky-500 text-white' 
-                : 'bg-sky-500/10 hover:bg-sky-500/20'
+                ? 'bg-red-500 text-white' 
+                : 'bg-red-500/10 hover:bg-red-500/20'
             }`}
             aria-label={isPlaying ? 'Pause' : 'Play'}
           >
@@ -180,12 +180,12 @@ export default function TrackPlayer({
                 <rect x="14" y="4" width="4" height="16" />
               </svg>
             ) : (
-              <svg className="w-4 h-4 text-sky-400" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-red-100" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z" />
               </svg>
             )}
           </button>
-          <span className={`${isPlaying ? 'text-sky-400 font-medium' : ''}`}>
+          <span className={`${isPlaying ? 'text-red-100 font-medium' : ''}`}>
             {title}
           </span>
         </div>
@@ -195,7 +195,7 @@ export default function TrackPlayer({
           {/* Only show volume controls on desktop */}
           <div className="hidden md:flex items-center gap-2">
             <svg 
-              className={`w-4 h-4 ${isPlaying ? 'text-sky-400' : 'text-gray-400'}`}
+              className={`w-4 h-4 ${isPlaying ? 'text-red-100' : 'text-gray-400'}`}
               fill="currentColor" 
               viewBox="0 0 24 24"
             >
@@ -215,7 +215,7 @@ export default function TrackPlayer({
               onChange={handleVolumeChange}
               className={`w-20 h-1 rounded-lg appearance-none cursor-pointer 
                 ${isPlaying 
-                  ? 'bg-sky-900/50 [&::-webkit-slider-thumb]:bg-sky-400' 
+                  ? 'bg-red-500/50 [&::-webkit-slider-thumb]:bg-red-100' 
                   : 'bg-gray-900/50 [&::-webkit-slider-thumb]:bg-gray-400'
                 }
                 [&::-webkit-slider-thumb]:appearance-none 
@@ -224,7 +224,7 @@ export default function TrackPlayer({
                 [&::-webkit-slider-thumb]:rounded-full`}
             />
           </div>
-          <span className={`w-16 text-right tabular-nums ${isPlaying ? 'text-sky-400' : 'text-gray-400'}`}>
+          <span className={`w-16 text-right tabular-nums ${isPlaying ? 'text-red-100' : 'text-gray-400'}`}>
             {currentTime}
           </span>
         </div>
@@ -239,12 +239,12 @@ export default function TrackPlayer({
             max="100"
             value={progress}
             onChange={handleProgressChange}
-            className="w-full h-1 bg-sky-900/50 rounded-lg appearance-none cursor-pointer 
+            className="w-full h-1 bg-red-500/50 rounded-lg appearance-none cursor-pointer 
               [&::-webkit-slider-thumb]:appearance-none 
               [&::-webkit-slider-thumb]:w-3 
               [&::-webkit-slider-thumb]:h-3 
               [&::-webkit-slider-thumb]:rounded-full 
-              [&::-webkit-slider-thumb]:bg-sky-400"
+              [&::-webkit-slider-thumb]:bg-red-100"
           />
         </div>
       )}

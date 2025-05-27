@@ -24,8 +24,8 @@ const NewsSchema = new Schema<INews>({
   },
   category: {
     type: String,
-    enum: ['Release', 'Tour', 'Update', 'Announcement', 'Launch'],
-    required: true
+    required: true,
+    enum: ['Release', 'Update', 'Announcement', 'Launch'],
   }
 }, {
   timestamps: true

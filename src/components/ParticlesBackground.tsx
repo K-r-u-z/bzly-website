@@ -28,13 +28,11 @@ export default function ParticlesBackground({ preset = 'default' }: ParticlesBac
       },
       color: {
         value: [
-          "#111111",  // Almost black
-          "#222222",  // Very dark gray
-          "#333333",  // Dark gray
-          "#444444",  // Medium dark gray
-          "#666666",   // Medium gray
-          "#777777",  // Slightly lighter gray
-          "#999999",  // Light gray
+          "#BF0B02",  // red-100
+          "#AE0603",  // red-200
+          "#880203",  // red-300
+          "#560000",  // red-400
+          "#250100",  // red-500
         ]
       },
       shape: {
@@ -97,11 +95,14 @@ export default function ParticlesBackground({ preset = 'default' }: ParticlesBac
   }
 
   return (
-    <Particles
-      className="absolute inset-0"
-      id="tsparticles"
-      init={particlesInit}
-      options={baseConfig}
-    />
+    <div className="absolute inset-0">
+      <Particles
+        className="absolute inset-0"
+        id="tsparticles"
+        init={particlesInit}
+        options={baseConfig}
+        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+      />
+    </div>
   )
 } 

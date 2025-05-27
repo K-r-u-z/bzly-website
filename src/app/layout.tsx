@@ -3,12 +3,15 @@ import type { Metadata } from 'next'
 import { Outfit, Plus_Jakarta_Sans } from 'next/font/google'
 import dynamic from 'next/dynamic'
 import './globals.css'
+import { Providers } from './providers'
 
 // Dynamically import client components
 const Navbar = dynamic(() => import('@/components/Navbar'), { ssr: true })
 const Footer = dynamic(() => import('@/components/Footer'), { ssr: true })
 const PageTransition = dynamic(() => import('@/components/PageTransition'), { ssr: true })
 const ErrorBoundary = dynamic(() => import('@/components/ErrorBoundary'), { ssr: true })
+const ClientSmokeEffect = dynamic(() => import('@/components/ClientSmokeEffect'), { ssr: true })
+const ClientCustomCursor = dynamic(() => import('@/components/ClientCustomCursor'), { ssr: true })
 
 const outfit = Outfit({ 
   subsets: ['latin'],
@@ -68,13 +71,17 @@ export default function RootLayout({
         className={`${outfit.variable} ${jakarta.variable} font-sans`}
         key="main-layout"
       >
-        <ErrorBoundary>
-          <Navbar />
-          <PageTransition>
-            {children}
-          </PageTransition>
-          <Footer />
-        </ErrorBoundary>
+        <Providers>
+          <ErrorBoundary>
+            <ClientCustomCursor />
+            <ClientSmokeEffect />
+            <Navbar />
+            <PageTransition>
+              {children}
+            </PageTransition>
+            <Footer />
+          </ErrorBoundary>
+        </Providers>
       </body>
     </html>
   )

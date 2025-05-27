@@ -7,6 +7,15 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        'red': {
+          100: '#BF0B02',
+          200: '#AE0603',
+          300: '#880203',
+          400: '#560000',
+          500: '#250100',
+        },
+      },
       fontFamily: {
         sans: ['var(--font-jakarta)', 'system-ui', 'sans-serif'],
         heading: ['var(--font-outfit)', 'system-ui', 'sans-serif'],

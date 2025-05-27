@@ -81,25 +81,25 @@ export default function Navbar(): React.ReactElement {
                   href={item.path}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`relative px-2 py-1 group transition-colors text-white hover:text-sky-400`}
+                  className={`relative px-2 py-1 group transition-colors text-white hover:text-red-100`}
                 >
                   {item.name}
-                  <span className="absolute bottom-0 left-1/2 w-0 h-[2px] bg-sky-400 group-hover:w-full group-hover:left-0 transition-all duration-300" />
+                  <span className="absolute bottom-0 left-1/2 w-0 h-[2px] bg-red-100 group-hover:w-full group-hover:left-0 transition-all duration-300" />
                 </a>
               ) : (
                 <Link
                   href={item.path}
                   className={`relative px-2 py-1 group transition-colors ${
                     isActive(item.path)
-                      ? 'text-sky-400'
-                      : 'text-white hover:text-sky-400'
+                      ? 'text-red-100'
+                      : 'text-white hover:text-red-100'
                   }`}
                 >
                   {item.name}
-                  <span className="absolute bottom-0 left-1/2 w-0 h-[2px] bg-sky-400 group-hover:w-full group-hover:left-0 transition-all duration-300" />
+                  <span className="absolute bottom-0 left-1/2 w-0 h-[2px] bg-red-100 group-hover:w-full group-hover:left-0 transition-all duration-300" />
                   {isActive(item.path) && (
                     <motion.div
-                      className="absolute bottom-0 left-0 w-full h-[2px] bg-sky-400"
+                      className="absolute bottom-0 left-0 w-full h-[2px] bg-red-100"
                       layoutId="underline"
                       transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                     />
@@ -161,7 +161,7 @@ export default function Navbar(): React.ReactElement {
                     href={item.path}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block px-3 py-2 text-base text-white hover:text-sky-400 hover:bg-sky-900/10 transition-all duration-300"
+                    className="block px-3 py-2 text-base text-white hover:text-red-100 hover:bg-red-500/10 transition-all duration-300"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {item.name}
@@ -171,8 +171,8 @@ export default function Navbar(): React.ReactElement {
                     href={item.path}
                     className={`block px-3 py-2 text-base transition-all duration-300 ${
                       isActive(item.path)
-                        ? 'text-sky-400 bg-sky-900/20'
-                        : 'text-white hover:text-sky-400 hover:bg-sky-900/10'
+                        ? 'text-red-100 bg-red-500/20'
+                        : 'text-white hover:text-red-100 hover:bg-red-500/10'
                     }`}
                     onClick={() => setIsMenuOpen(false)}
                   >

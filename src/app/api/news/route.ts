@@ -65,16 +65,14 @@ export async function POST(request: Request) {
 function getCategoryColor(category: string): string {
   switch (category) {
     case 'Release':
-      return '#0ea5e9' // sky-600
-    case 'Tour':
-      return '#6366f1' // indigo-500
+      return 'bg-red-100'
     case 'Update':
-      return '#22c55e' // green-500
-    case 'Launch':
-      return '#8b5cf6' // purple-500
+      return 'bg-red-300'
     case 'Announcement':
-      return '#f59e0b' // amber-500
+      return 'bg-red-400'
+    case 'Launch':
+      return 'bg-red-500'
     default:
-      return '#64748b' // gray-500
+      return '#880203' // red-300
   }
 } 

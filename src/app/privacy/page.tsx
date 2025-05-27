@@ -5,7 +5,7 @@ export default function Privacy() {
         <h1 className="text-4xl font-bold mb-8">Privacy Policy</h1>
         
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4 text-sky-400">Information We Collect</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-red-100">1. Information Collection</h2>
           <p className="text-gray-300 mb-4">
             We collect minimal information to provide you with the best experience on our website. This includes:
           </p>
@@ -17,7 +17,7 @@ export default function Privacy() {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4 text-sky-400">How We Use Your Information</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-red-100">2. Use of Information</h2>
           <p className="text-gray-300 mb-4">
             We use collected information to:
           </p>
@@ -29,21 +29,27 @@ export default function Privacy() {
         </section>
 
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4 text-sky-400">Third-Party Services</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-red-100">3. Information Sharing</h2>
           <p className="text-gray-300 mb-4">
-            Our website integrates with third-party services including SoundCloud and Spotify for music playback. These services may collect additional information according to their own privacy policies.
+            Our website integrates with third-party services including SoundCloud for music playback.
+            These services may collect additional information according to their privacy policies.
           </p>
+          <p>We may use third-party services such as:</p>
+          <ul>
+            <li>SoundCloud for music streaming</li>
+            <li>Social media platforms (Instagram, Twitter)</li>
+          </ul>
         </section>
 
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4 text-sky-400">Data Security</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-red-100">4. Data Security</h2>
           <p className="text-gray-300 mb-4">
             We implement appropriate security measures to protect your information. However, no internet transmission is completely secure, and we cannot guarantee absolute security.
           </p>
         </section>
 
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4 text-sky-400">Contact Information</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-red-100">5. Your Rights</h2>
           <p className="text-gray-300 mb-4">
             For any privacy-related questions or concerns, please contact us through our contact form.
           </p>
