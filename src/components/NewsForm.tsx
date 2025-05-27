@@ -14,8 +14,8 @@ import Superscript from '@tiptap/extension-superscript'
 import Highlight from '@tiptap/extension-highlight'
 import TextStyle from '@tiptap/extension-text-style'
 import Color from '@tiptap/extension-color'
-import FontSize from '@tiptap/extension-font-size'
 import FontFamily from '@tiptap/extension-font-family'
+import { FontSize } from '@/extensions/font-size'
 import ImageUpload from './ImageUpload'
 import '@/styles/editor.css'
 
@@ -53,19 +53,19 @@ const MenuBar = ({ editor }: { editor: any }) => {
         <select
           onChange={(e) => {
             const size = e.target.value
-            editor.chain().focus().setFontSize(`${size}px`).run()
+            editor.chain().focus().setFontSize(size).run()
           }}
           className="bg-gray-700 text-white rounded px-2 py-1 text-sm"
         >
-          <option value="8">8px</option>
-          <option value="10">10px</option>
-          <option value="12">12px</option>
-          <option value="14">14px</option>
-          <option value="16">16px</option>
-          <option value="18">18px</option>
-          <option value="20">20px</option>
-          <option value="24">24px</option>
-          <option value="32">32px</option>
+          <option value="8px">8px</option>
+          <option value="10px">10px</option>
+          <option value="12px">12px</option>
+          <option value="14px">14px</option>
+          <option value="16px">16px</option>
+          <option value="18px">18px</option>
+          <option value="20px">20px</option>
+          <option value="24px">24px</option>
+          <option value="32px">32px</option>
         </select>
       </div>
 
@@ -238,12 +238,10 @@ export default function NewsForm({ initialData, onSubmit, isLoading }: NewsFormP
       Highlight,
       TextStyle,
       Color,
-      FontSize.configure({
-        types: ['textStyle']
-      }),
       FontFamily.configure({
         types: ['textStyle'],
       }),
+      FontSize,
     ],
     content: initialData?.content || '',
     editorProps: {
