@@ -167,25 +167,25 @@ export default function TrackPlayer({
         <div className="flex items-center gap-4">
           <button
             onClick={togglePlay}
-            className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
               isPlaying 
-                ? 'bg-red-500 text-white' 
-                : 'bg-red-500/10 hover:bg-red-500/20'
+                ? 'bg-red-400 text-white shadow-lg shadow-red-400/50' 
+                : 'bg-red-400/20 hover:bg-red-400/30 text-red-400'
             }`}
             aria-label={isPlaying ? 'Pause' : 'Play'}
           >
             {isPlaying ? (
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <rect x="6" y="4" width="4" height="16" />
                 <rect x="14" y="4" width="4" height="16" />
               </svg>
             ) : (
-              <svg className="w-4 h-4 text-red-100" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z" />
               </svg>
             )}
           </button>
-          <span className={`${isPlaying ? 'text-red-100 font-medium' : ''}`}>
+          <span className={`${isPlaying ? 'text-red-100 font-medium' : 'text-white'}`}>
             {title}
           </span>
         </div>

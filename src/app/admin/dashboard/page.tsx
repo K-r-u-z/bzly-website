@@ -144,7 +144,7 @@ export default function AdminDashboard(): React.ReactElement {
           {/* Management Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-12">
             {/* Admin Menu Card */}
-            <div className="md:col-span-2 bg-gradient-to-br from-black/90 to-black/95 rounded-xl p-4 border border-gray-800 hover:border-gray-700 transition-all duration-300">
+            <div className="md:col-span-2 bg-gradient-to-br from-black/90 to-black/95 rounded-xl p-4 border border-red-400 hover:border-red-300 transition-all duration-300">
               <div className="flex flex-col h-full">
                 <div className="space-y-3">
                   <Link 
@@ -178,7 +178,7 @@ export default function AdminDashboard(): React.ReactElement {
                 <div className="mt-auto pt-3">
                   <button
                     onClick={handleLogout}
-                    className="flex items-center gap-2 p-3 bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 rounded-lg transition-all duration-300 w-full h-12"
+                    className="flex items-center gap-2 p-3 bg-red-400/50 hover:bg-red-300/50 text-white rounded-lg transition-all duration-300 w-full h-12"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -190,10 +190,10 @@ export default function AdminDashboard(): React.ReactElement {
             </div>
 
             {/* Music Management Card */}
-            <div className="md:col-span-5 bg-gradient-to-br from-black/90 to-black/95 rounded-xl p-6 border border-gray-800 hover:border-gray-700 transition-all duration-300">
+            <div className="md:col-span-5 bg-gradient-to-br from-black/90 to-black/95 rounded-xl p-6 border border-red-400 hover:border-red-300 transition-all duration-300">
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-3 bg-gray-800/50 rounded-lg">
-                  <svg className="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="p-3 bg-red-400/50 rounded-lg">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
                   </svg>
                 </div>
@@ -211,12 +211,12 @@ export default function AdminDashboard(): React.ReactElement {
                 </button>
                 <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
                   {albums.map((album) => (
-                    <div key={album.id} className="flex items-center gap-4 p-3 bg-gray-800/50 rounded-lg hover:bg-gray-700/50 transition-all duration-300">
+                    <div key={album.id} className="flex items-center gap-4 p-3 bg-red-400/50 rounded-lg hover:bg-red-300/50 transition-all duration-300">
                       <div className="flex-grow">
                         <h3 className="text-white font-medium">{album.title}</h3>
                         <div className="flex items-center gap-3 mt-1">
-                          <p className="text-gray-400 text-sm">{album.year}</p>
-                          <span className="text-gray-400 text-sm">
+                          <p className="text-white/80 text-sm">{album.year}</p>
+                          <span className="text-white/80 text-sm">
                             {album.tracks.length} tracks
                           </span>
                         </div>
@@ -224,7 +224,7 @@ export default function AdminDashboard(): React.ReactElement {
                       <div className="flex gap-2">
                         <button
                           onClick={() => router.push(`/admin/dashboard/music/edit/${album._id}`)}
-                          className="p-2 text-gray-400 hover:text-white transition-colors"
+                          className="p-2 text-white/80 hover:text-white transition-colors"
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -232,7 +232,7 @@ export default function AdminDashboard(): React.ReactElement {
                         </button>
                         <button
                           onClick={() => handleDeleteAlbum(album.id.toString())}
-                          className="p-2 text-gray-400 hover:text-white transition-colors"
+                          className="p-2 text-white/80 hover:text-white transition-colors"
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -246,10 +246,10 @@ export default function AdminDashboard(): React.ReactElement {
             </div>
 
             {/* News Management Card */}
-            <div className="md:col-span-5 bg-gradient-to-br from-black/90 to-black/95 rounded-xl p-6 border border-gray-800 hover:border-gray-700 transition-all duration-300">
+            <div className="md:col-span-5 bg-gradient-to-br from-black/90 to-black/95 rounded-xl p-6 border border-red-400 hover:border-red-300 transition-all duration-300">
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-3 bg-gray-800/50 rounded-lg">
-                  <svg className="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="p-3 bg-red-400/50 rounded-lg">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                   </svg>
                 </div>
@@ -267,17 +267,17 @@ export default function AdminDashboard(): React.ReactElement {
                 </button>
                 <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
                   {newsItems.map((item) => (
-                    <div key={item.id} className="flex items-center gap-4 p-3 bg-gray-800/50 rounded-lg hover:bg-gray-700/50 transition-all duration-300">
+                    <div key={item.id} className="flex items-center gap-4 p-3 bg-red-400/50 rounded-lg hover:bg-red-300/50 transition-all duration-300">
                       <div className="flex-grow min-w-0">
                         <h3 className="text-white font-medium truncate" dangerouslySetInnerHTML={{ __html: item.title }} />
                         <div className="flex items-center gap-3 mt-1">
-                          <p className="text-gray-400 text-sm">{item.date}</p>
+                          <p className="text-white/80 text-sm">{item.date}</p>
                           <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-sm font-medium
-                            ${item.category === 'Release' ? 'bg-gray-800 text-gray-300' :
-                              item.category === 'Update' ? 'bg-gray-800 text-gray-300' :
-                              item.category === 'Announcement' ? 'bg-gray-800 text-gray-300' :
-                              item.category === 'Launch' ? 'bg-gray-800 text-gray-300' :
-                              'bg-gray-800 text-gray-300'
+                            ${item.category === 'Release' ? 'bg-red-400/50 text-white' :
+                              item.category === 'Update' ? 'bg-red-400/50 text-white' :
+                              item.category === 'Announcement' ? 'bg-red-400/50 text-white' :
+                              item.category === 'Launch' ? 'bg-red-400/50 text-white' :
+                              'bg-red-400/50 text-white'
                             }`}>
                             {item.category}
                           </span>
@@ -286,7 +286,7 @@ export default function AdminDashboard(): React.ReactElement {
                       <div className="flex gap-2 shrink-0">
                         <button
                           onClick={() => router.push(`/admin/dashboard/news/edit/${item._id}`)}
-                          className="p-2 text-gray-400 hover:text-white transition-colors"
+                          className="p-2 text-white/80 hover:text-white transition-colors"
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -294,7 +294,7 @@ export default function AdminDashboard(): React.ReactElement {
                         </button>
                         <button
                           onClick={() => handleDelete(item.id.toString())}
-                          className="p-2 text-gray-400 hover:text-white transition-colors"
+                          className="p-2 text-white/80 hover:text-white transition-colors"
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -307,6 +307,13 @@ export default function AdminDashboard(): React.ReactElement {
               </div>
             </div>
           </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="p-4 bg-black/50 border border-red-400/50 rounded-lg text-gray-300">
+              {error}
+            </div>
+          )}
         </div>
       </section>
     </main>

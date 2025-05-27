@@ -128,7 +128,7 @@ export default function EditAbout(): React.ReactElement {
                 value={aboutData.journey}
                 onChange={handleJourneyChange}
                 rows={6}
-                className="w-full px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-red-100 text-white"
+                className="w-full px-4 py-2 rounded-lg bg-black border border-gray-700 focus:outline-none focus:border-red-100 text-white"
                 required
               />
             </div>
@@ -154,7 +154,7 @@ export default function EditAbout(): React.ReactElement {
                 <button
                   type="button"
                   onClick={addMilestone}
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                  className="px-4 py-2 bg-red-400 text-white rounded-lg hover:bg-red-300 transition-colors"
                 >
                   Add Milestone
                 </button>
@@ -162,7 +162,7 @@ export default function EditAbout(): React.ReactElement {
               
               <div className="space-y-4">
                 {aboutData.milestones.map((milestone, index) => (
-                  <div key={index} className="p-4 bg-gray-900 rounded-lg border border-gray-700">
+                  <div key={index} className="p-4 bg-black rounded-lg border border-gray-700">
                     <div className="flex justify-between items-start mb-4">
                       <h4 className="text-white font-medium">Milestone {index + 1}</h4>
                       <button
@@ -185,7 +185,7 @@ export default function EditAbout(): React.ReactElement {
                           type="text"
                           value={milestone.number}
                           onChange={(e) => handleMilestoneChange(index, 'number', e.target.value)}
-                          className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:border-red-100 text-white"
+                          className="w-full px-4 py-2 rounded-lg bg-black border border-gray-700 focus:outline-none focus:border-red-100 text-white"
                           required
                         />
                       </div>
@@ -198,7 +198,7 @@ export default function EditAbout(): React.ReactElement {
                           type="text"
                           value={milestone.label}
                           onChange={(e) => handleMilestoneChange(index, 'label', e.target.value)}
-                          className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:border-red-100 text-white"
+                          className="w-full px-4 py-2 rounded-lg bg-black border border-gray-700 focus:outline-none focus:border-red-100 text-white"
                           required
                         />
                       </div>
@@ -211,7 +211,7 @@ export default function EditAbout(): React.ReactElement {
                           type="text"
                           value={milestone.description}
                           onChange={(e) => handleMilestoneChange(index, 'description', e.target.value)}
-                          className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:border-red-100 text-white"
+                          className="w-full px-4 py-2 rounded-lg bg-black border border-gray-700 focus:outline-none focus:border-red-100 text-white"
                           required
                         />
                       </div>
@@ -231,13 +231,13 @@ export default function EditAbout(): React.ReactElement {
               <button
                 type="button"
                 onClick={() => router.push('/admin/dashboard')}
-                className="px-6 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
+                className="px-6 py-2 bg-black text-gray-300 rounded-lg hover:bg-gray-800 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                className="px-6 py-2 bg-red-400 text-white rounded-lg hover:bg-red-300 transition-colors"
               >
                 Save Changes
               </button>

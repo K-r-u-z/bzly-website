@@ -41,7 +41,7 @@ export default function EmailPreviewPage() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Controls */}
-            <div className="space-y-6 bg-black/50 p-6 rounded-lg border border-red-500/20">
+            <div className="space-y-6 bg-black/50 p-6 rounded-lg border border-red-400/20">
               {/* Email Type Toggle */}
               <div>
                 <label className="block text-white mb-2">Email Type</label>
@@ -51,7 +51,7 @@ export default function EmailPreviewPage() {
                     className={`p-2 rounded-lg transition-all duration-300 ${
                       emailType === 'news'
                         ? 'bg-red-400 text-white'
-                        : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                        : 'bg-black text-white/80 hover:bg-red-400/50'
                     }`}
                   >
                     News Email
@@ -61,7 +61,7 @@ export default function EmailPreviewPage() {
                     className={`p-2 rounded-lg transition-all duration-300 ${
                       emailType === 'welcome'
                         ? 'bg-red-400 text-white'
-                        : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                        : 'bg-black text-white/80 hover:bg-red-400/50'
                     }`}
                   >
                     Welcome Email
@@ -78,7 +78,7 @@ export default function EmailPreviewPage() {
                       type="text"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      className="w-full p-2 rounded bg-gray-800 text-white border border-gray-700 focus:border-red-100 focus:outline-none"
+                      className="w-full p-2 rounded bg-black text-white border border-red-400/20 focus:border-red-400 focus:outline-none"
                     />
                   </div>
 
@@ -87,7 +87,7 @@ export default function EmailPreviewPage() {
                     <select
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
-                      className="w-full p-2 rounded bg-gray-800 text-white border border-gray-700 focus:border-red-100 focus:outline-none"
+                      className="w-full p-2 rounded bg-black text-white border border-red-400/20 focus:border-red-400 focus:outline-none"
                     >
                       <option value="RELEASE">Release</option>
                       <option value="UPDATE">Update</option>
@@ -100,21 +100,27 @@ export default function EmailPreviewPage() {
 
               <button
                 onClick={handlePreview}
-                className="w-full bg-red-400 hover:bg-red-300 text-white py-2 px-4 rounded-full transition-all duration-300"
+                className="w-full bg-red-400 hover:bg-red-300 text-white py-2 px-4 rounded-lg transition-all duration-300"
               >
                 Generate Preview
               </button>
             </div>
 
             {/* Preview */}
-            <div className="bg-black/50 p-6 rounded-lg border border-red-500/20">
+            <div className="bg-black/50 p-6 rounded-lg border border-red-400/20">
               <h2 className="text-xl font-bold text-white mb-4">Preview</h2>
-              <div className="bg-white rounded-lg overflow-hidden">
-                <iframe
-                  srcDoc={previewHtml}
-                  className="w-full h-[600px]"
-                  title="Email Preview"
-                />
+              <div className={`rounded-lg overflow-hidden ${previewHtml ? 'bg-white' : 'bg-black border border-red-400/20'}`}>
+                {previewHtml ? (
+                  <iframe
+                    srcDoc={previewHtml}
+                    className="w-full h-[600px]"
+                    title="Email Preview"
+                  />
+                ) : (
+                  <div className="w-full h-[600px] flex items-center justify-center text-white/60">
+                    Click "Generate Preview" to see the email template
+                  </div>
+                )}
               </div>
             </div>
           </div>

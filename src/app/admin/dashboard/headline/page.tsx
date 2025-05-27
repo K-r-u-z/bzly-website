@@ -79,14 +79,14 @@ export default function HeadlinePage(): React.ReactElement {
                 id="headline"
                 value={headline}
                 onChange={(e) => setHeadline(e.target.value)}
-                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                className="w-full px-4 py-2 bg-black border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent"
                 placeholder="Enter headline text"
                 required
               />
             </div>
 
             {error && (
-              <div className="p-4 bg-gray-800/50 border border-gray-700 rounded-lg text-gray-300">
+              <div className="p-4 bg-black/50 border border-gray-700 rounded-lg text-gray-300">
                 {error}
               </div>
             )}
@@ -95,14 +95,14 @@ export default function HeadlinePage(): React.ReactElement {
               <button
                 type="submit"
                 disabled={isSaving}
-                className="flex-1 px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-6 py-3 bg-red-400 hover:bg-red-300 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSaving ? 'Saving...' : 'Save Headline'}
               </button>
               <button
                 type="button"
                 onClick={() => router.push('/admin/dashboard')}
-                className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
+                className="px-6 py-3 bg-black hover:bg-red-400 text-white rounded-lg transition-colors"
               >
                 Cancel
               </button>
