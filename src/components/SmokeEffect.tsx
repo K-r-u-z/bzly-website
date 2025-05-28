@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Particle {
   x: number;
@@ -20,14 +20,26 @@ const SmokeEffect = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particles: Particle[] = [];
   const mousePosition = useRef({ x: 0, y: 0 });
+  const [isDesktop, setIsDesktop] = useState(false);
 
   // Offset values for smoke position
   const OFFSET_X = 15; // Pixels to the right
   const OFFSET_Y = -11; // Pixels up (negative means up)
 
   useEffect(() => {
+    // Check if we're on desktop (width > 768px)
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth > 768);
+    };
+
+    // Initial check
+    checkDesktop();
+
+    // Add resize listener
+    window.addEventListener('resize', checkDesktop);
+
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || !isDesktop) return;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -162,10 +174,14 @@ const SmokeEffect = () => {
 
     // Cleanup
     return () => {
+      window.removeEventListener('resize', checkDesktop);
       window.removeEventListener('resize', resizeCanvas);
       window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, []);
+  }, [isDesktop]);
+
+  // Don't render anything on mobile
+  if (!isDesktop) return null;
 
   return (
     <canvas
