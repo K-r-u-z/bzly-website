@@ -1,20 +1,31 @@
 import Image from 'next/image'
 
 interface SocialIconProps {
-  platform: 'instagram' | 'twitter' | 'soundcloud'
+  platform: 'discord' | 'soundcloud'
   className?: string
 }
 
 export default function SocialIcon({ platform, className = '' }: SocialIconProps) {
-  return (
-    <div className={`relative w-10 h-10 ${className}`}>
-      <Image
-        src={`/icons/${platform}.png`}
-        alt={platform}
-        width={40}
-        height={40}
-        className="object-contain"
-      />
-    </div>
-  )
+  switch (platform) {
+    case 'discord':
+      return (
+        <Image
+          src="/icons/discord.png"
+          alt="Discord"
+          width={24}
+          height={24}
+          className={className}
+        />
+      )
+    case 'soundcloud':
+      return (
+        <Image
+          src="/icons/music.png"
+          alt="SoundCloud"
+          width={24}
+          height={24}
+          className={className}
+        />
+      )
+  }
 } 

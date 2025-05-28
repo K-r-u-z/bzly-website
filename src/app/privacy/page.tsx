@@ -45,12 +45,11 @@ export default function Privacy() {
             <h2 className="text-2xl font-semibold mb-4 text-white">2. Information Sharing</h2>
             <p className="text-gray-300 mb-4">
               Our website integrates with third-party services including SoundCloud for music playback.
-              These services may collect additional information according to their privacy policies.
             </p>
-            <p className="text-gray-300">We may use third-party services such as:</p>
-            <ul className="list-disc list-inside text-gray-300 ml-4 space-y-2">
+            <p className="text-gray-300">We use the following third-party services:</p>
+            <ul className="list-disc pl-6 space-y-2">
               <li>SoundCloud for music streaming</li>
-              <li>Social media platforms (Instagram, Twitter)</li>
+              <li>Social media platforms (Discord)</li>
             </ul>
           </section>
 

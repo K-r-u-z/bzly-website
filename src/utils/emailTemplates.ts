@@ -31,6 +31,13 @@ export function generateEmail(data: EmailData) {
     <h1 style="color: #ffffff; font-size: 28px; margin: 0 0 30px 0; font-weight: 700;">
       ${data.title}
     </h1>
+
+    <!-- Message Content -->
+    <div style="text-align: left; margin: 0 auto 30px; max-width: 500px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 10px;">
+      <div style="color: #ffffff; font-size: 16px; line-height: 1.6; white-space: pre-line;">
+        ${data.content || ''}
+      </div>
+    </div>
     
     <!-- CTA Button -->
     <a href="${process.env.NEXT_PUBLIC_BASE_URL}${data.articleId ? `/news/${data.articleId}` : ''}" 
@@ -42,9 +49,8 @@ export function generateEmail(data: EmailData) {
     <div style="margin-top: 40px; border-top: 1px solid #250100; padding-top: 20px;">
       <p style="color: #666666; margin-bottom: 15px; font-size: 12px;">Follow BZLY</p>
       <div style="text-align: center; margin: 20px 0;">
-        <a href="#" style="margin: 0 8px;"><img src="${process.env.NEXT_PUBLIC_BASE_URL}/icons/instagram.png" alt="Instagram" width="20"/></a>
-        <a href="#" style="margin: 0 8px;"><img src="${process.env.NEXT_PUBLIC_BASE_URL}/icons/twitter.png" alt="Twitter" width="20"/></a>
-        <a href="#" style="margin: 0 8px;"><img src="${process.env.NEXT_PUBLIC_BASE_URL}/icons/soundcloud.png" alt="SoundCloud" width="20"/></a>
+        <a href="https://discord.gg/9qaK8uaKXN" style="margin: 0 8px;"><img src="${process.env.NEXT_PUBLIC_BASE_URL}/icons/discord.png" alt="Discord" width="20"/></a>
+        <a href="https://soundcloud.com/kruzbeats" style="margin: 0 8px;"><img src="${process.env.NEXT_PUBLIC_BASE_URL}/icons/music.png" alt="SoundCloud" width="20"/></a>
       </div>
       <p style="color: #666666; font-size: 11px; margin: 0 0 10px 0;">
         You're receiving this email because you subscribed to BZLY updates

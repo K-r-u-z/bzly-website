@@ -10,8 +10,8 @@ export default function Footer(): React.ReactElement {
       { name: 'Discography', href: '/music' },
     ],
     social: [
-      { name: 'X', href: 'https://x.com/peanutrb' },
-      { name: 'Soundcloud', href: 'https://soundcloud.com/kruzbeats' }
+      { name: 'Discord', href: 'https://discord.gg/9qaK8uaKXN' },
+      { name: 'SoundCloud', href: 'https://soundcloud.com/kruzbeats' }
     ],
     contact: [
       { name: 'contact@bzly.info', href: '/contact' },

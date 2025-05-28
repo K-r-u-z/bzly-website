@@ -5,15 +5,15 @@ import PageHero from '@/components/PageHero'
 import SocialIcon from '@/components/SocialIcon'
 import ContactForm from '@/components/ContactForm'
 
-type SocialLink = {
+interface SocialLink {
   url: string
-  platform: 'instagram' | 'twitter' | 'soundcloud'
+  platform: 'discord' | 'soundcloud'
 }
 
 export default function Contact(): React.ReactElement {
   const socialLinks: SocialLink[] = [
-    { platform: 'twitter', url: 'https://twitter.com/peanutrb' },
-    { platform: 'soundcloud', url: 'https://soundcloud.com/user-405939442' }
+    { platform: 'discord', url: 'https://discord.gg/9qaK8uaKXN' },
+    { platform: 'soundcloud', url: 'https://soundcloud.com/kruzbeats' }
   ]
 
   return (
