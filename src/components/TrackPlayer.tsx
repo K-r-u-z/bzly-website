@@ -44,7 +44,7 @@ export default function TrackPlayer({
   const [showProgress, setShowProgress] = useState(false)
   const [widget, setWidget] = useState<any>(null)
   const [isWidgetReady, setIsWidgetReady] = useState(false)
-  const iframeId = `sc-widget-${title.replace(/\s+/g, '-').toLowerCase()}`
+  const iframeId = `sc-widget-${albumId}-${title.replace(/\s+/g, '-').toLowerCase()}-${Math.random().toString(36).substr(2, 9)}`
 
   useEffect(() => {
     const script = document.createElement('script')
